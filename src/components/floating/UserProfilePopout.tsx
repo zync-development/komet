@@ -5,7 +5,7 @@ import { GuildMember, User } from "@structures";
 import { REST, Snowflake } from "@utils";
 import styled from "styled-components";
 
-import SpacebarLogoBlue from "@assets/images/logo/Spacebar_Icon.svg?react";
+import kometLogoBlue from "@assets/images/logo/Komet_Icon.svg?react";
 import { useAppStore } from "@hooks/useAppStore";
 import { CDNRoutes, ImageFormat } from "@spacebarchat/spacebar-api-types/v9";
 import dayjs from "dayjs";
@@ -213,12 +213,12 @@ function UserProfilePopout({ user, member }: Props) {
 							placement="top"
 							type="tooltip"
 							props={{
-								content: <span>Spacebar</span>,
+								content: <span>Komet</span>,
 							}}
 						>
 							<FloatingTrigger>
 								<div>
-									<SpacebarLogoBlue width={16} height={16} style={{ borderRadius: "50%" }} />
+									<kometLogoBlue width={16} height={16} style={{ borderRadius: "50%" }} />
 								</div>
 							</FloatingTrigger>
 						</Floating>

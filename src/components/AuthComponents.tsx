@@ -4,16 +4,17 @@ import Button from "./Button";
 
 export const Wrapper = styled(Container)`
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 	background-color: var(--background-tertiary);
 	flex: 1;
+	padding-right: 10%;
 `;
 
 export const AuthContainer = styled(Container)`
 	background-color: var(--background-primary-alt);
-	padding: 32px;
-	font-size: 18px;
+	padding: 24px;
+	font-size: 16px;
 	color: var(--text-muted);
 	display: flex;
 	flex-direction: column;
@@ -25,10 +26,9 @@ export const AuthContainer = styled(Container)`
 		height: 100%;
 		justify-content: center;
 	}
-
 	@media (min-width: 480px) {
-		width: 480px;
-		border-radius: 18px;
+		width: 400px;
+		border-radius: 16px;
 	}
 `;
 

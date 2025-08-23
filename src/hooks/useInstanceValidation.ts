@@ -29,25 +29,36 @@ export function useInstanceValidation<T extends FieldValues>(
 			if (debounce) clearTimeout(debounce);
 
 			const doRequest = async () => {
-				const url = getValidURL(e.target.value);
-				if (!url) return;
+				let instanceUrl = e.target.value;
+				if (!instanceUrl.startsWith("http://") && !instanceUrl.startsWith("https://")) {
+					instanceUrl = `http://${instanceUrl}`;
+				}
+
+				const url = getValidURL(instanceUrl);
+				if (!url) {
+					setError(instanceField, {
+						type: "manual",
+						message: "Invalid URL format",
+					} as any);
+					return;
+				}
 				setCheckingInstance(true);
 
 				let endpoints: RouteSettings;
 				try {
 					endpoints = await REST.getEndpointsFromDomain(url);
 				} catch (e) {
-					setCheckingInstance(false);
 					return setError(instanceField, {
 						type: "manual",
 						message: (e instanceof Error && e.message) || "Instance could not be resolved",
 					} as any);
+				} finally {
+					setCheckingInstance(false);
 				}
 
 				logger.debug(`Instance lookup has set routes to`, endpoints);
 				Globals.routeSettings = endpoints;
 				Globals.save();
-				setCheckingInstance(false);
 			};
 
 			setDebounce(setTimeout(doRequest, 500));

@@ -4,6 +4,7 @@ import Link from "@components/Link";
 import { useAppStore } from "@hooks/useAppStore";
 import { APP_VERSION, GIT_BRANCH, GIT_REVISION, REPO_URL, isTauri } from "@utils";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styled, { css } from "styled-components";
 import { Modal } from "./ModalComponents";
@@ -154,6 +155,7 @@ const CloseButtonWrapper = styled.div`
 `;
 
 export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => {
+	const navigate = useNavigate();
 	const app = useAppStore();
 	const [index, setIndex] = useState(0);
 
@@ -162,6 +164,11 @@ export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => 
 		if (value) {
 			setIndex(parseInt(value));
 		}
+	};
+
+	const handleLogout = () => {
+		app.logout();
+		navigate("/login");
 	};
 
 	return (
@@ -183,7 +190,7 @@ export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => 
 									Experiments
 								</Item>
 								<Divider />
-								<Item onClick={app.logout}>
+								<Item onClick={handleLogout}>
 									<div
 										style={{
 											display: "flex",
@@ -242,6 +249,7 @@ export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => 
 							{index === 0 && <AccountSettingsPage />}
 							{index === 1 && <DeveloperSettingsPage />}
 							{index === 2 && <ExperimentsPage />}
+							{index === 3 && <ThemeSettingsPage />}
 						</ContentColumn>
 						<CloseContainer>
 							<CloseContainerInner></CloseContainerInner>

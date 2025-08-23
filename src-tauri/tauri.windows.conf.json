@@ -12,7 +12,7 @@
 			{
 				"fullscreen": false,
 				"resizable": true,
-				"title": "Spacebar",
+				"title": "spacebar",
 				"maximized": true,
 				"visible": false,
 				"label": "main"

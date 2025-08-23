@@ -1,4 +1,4 @@
-import SpacebarLogoBlue from "@assets/images/logo/Logo-Blue.svg?react";
+import KometLogoBlue from "@assets/images/logo/Komet-Logo-Blue.svg?react";
 import {
 	AuthContainer,
 	AuthSwitchPageContainer,
@@ -14,8 +14,8 @@ import {
 	LabelWrapper,
 	SubHeader,
 	SubmitButton,
-	Wrapper,
 } from "@components/AuthComponents";
+import { AnimatedBackground } from "@components/AnimatedBackground";
 import { TextDivider } from "@components/Divider";
 import HCaptcha, { HeaderContainer } from "@components/HCaptcha";
 import HCaptchaLib from "@hcaptcha/react-hcaptcha";
@@ -38,6 +38,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MFA from "./subpages/MFA";
 import { useInstanceValidation } from "@/hooks/useInstanceValidation";
+import styled from "styled-components";
+
+
 
 type FormValues = {
 	login: string;
@@ -191,17 +194,17 @@ function LoginPage() {
 	}
 
 	return (
-		<Wrapper>
+		<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
 			<AuthContainer>
 				<HeaderContainer>
 					{AUTH_NO_BRANDING ? (
 						<>
-							<Header>Login to Spacebar</Header>
+							<Header>Login to Komet</Header>
 						</>
 					) : (
 						<>
-							<SpacebarLogoBlue height={48} width="auto" />
-							<SubHeader noBranding>Log into Spacebar</SubHeader>
+							<KometLogoBlue height={48} width="100%" />
+							<SubHeader noBranding>Log into Komet</SubHeader>
 						</>
 					)}
 				</HeaderContainer>
@@ -299,7 +302,7 @@ function LoginPage() {
 					</SubmitButton>
 
 					<AuthSwitchPageContainer>
-						<AuthSwitchPageLabel>New to Spacebar?&nbsp;</AuthSwitchPageLabel>
+						<AuthSwitchPageLabel>New to Komet?&nbsp;</AuthSwitchPageLabel>
 						<AuthSwitchPageLink
 							onClick={() => {
 								navigate("/register");
@@ -311,7 +314,7 @@ function LoginPage() {
 					</AuthSwitchPageContainer>
 				</FormContainer>
 			</AuthContainer>
-		</Wrapper>
+		</AnimatedBackground>
 	);
 }
 

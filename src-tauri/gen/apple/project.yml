@@ -10,7 +10,7 @@ configs:
 settingGroups:
     app:
         base:
-            PRODUCT_NAME: Spacebar
+            PRODUCT_NAME: spacebar
             PRODUCT_BUNDLE_IDENTIFIER: chat.spacebar.app
             DEVELOPMENT_TEAM: 47RXBB8X9K
 targetTemplates:

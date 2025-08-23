@@ -34,6 +34,7 @@ export type ThemeVariables =
 	| "textDisabled"
 	| "textHint"
 	| "textLink"
+	| "textMuted"
 	| "inputBackground"
 	| "error"
 	| "divider"
@@ -83,6 +84,7 @@ export type ThemeFont = {
 		};
 		family: string;
 		familyCode: string;
+
 	};
 };
 
@@ -152,6 +154,7 @@ export const ThemePresets: Record<string, Theme> = {
 		textDisabled: "#909090",
 		textHeader: "#ffffff",
 		textHeaderSecondary: "#b3b3b3",
+		textMuted: "#8e8e8e",
 		textHint: "#22194D",
 		textLink: "#00a8fc",
 		inputBackground: "#121212",
@@ -187,7 +190,7 @@ export const ThemePresets: Record<string, Theme> = {
 	},
 };
 
-const GlobalTheme = createGlobalStyle<{ theme: Theme }>`
+const GlobalTheme = createGlobalStyle<{ theme: Theme }> `
 :root {
     ${(props) => generateVariables(props.theme)}
 }
@@ -205,7 +208,8 @@ function objectToCSSVariables(obj: any, parentKey = "") {
 		} else {
 			const variableName = `--${parentKey}-${toDashed(key)}`;
 			const variableValue = obj[key];
-			cssVariables += `${variableName}: ${variableValue};\n`;
+			cssVariables += `${variableName}: ${variableValue};
+`;
 		}
 	}
 

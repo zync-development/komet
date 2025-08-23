@@ -30,7 +30,7 @@ export const USER_JOIN_MESSAGES = [
 ];
 
 // TODO: this should come from the server
-export const MAX_UPLOAD_SIZE = 1024 * 1024 * 1024; // 1GB, taken from spacebar server default
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 1024; // 1GB, taken from komet server default
 export const EMBEDDABLE_VIDEO_MIMES = ["webm", "ogg", "mp4"]; // list of the mimetypes that can be used in a video element
 export const EMBEDDABLE_AUDIO_MIMES = ["mp3", "wav", "ogg", "x-wav", "mpeg", "mp4"]; // list of the mimetypes that can be used in an audio element
 export const EMBEDDABLE_IMAGE_MIMES = ["png", "jpg", "jpeg", "gif", "webp"]; // list of mimetypes that can be used in an image element
@@ -43,4 +43,4 @@ export const MAX_ATTACHMENTS = 15; // max number of attachments per message
 export const DISCORD_INVITE_REGEX =
 	/(?:^|\b)discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi;
 // matches :host/invite/:code
-export const SPACEBAR_INVITE_REGEX = /(?:^|\b)[\w\\.-]+(?:\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi;
+export const komet_INVITE_REGEX = /(?:^|\b)[\w\\.-]+(?:\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi;

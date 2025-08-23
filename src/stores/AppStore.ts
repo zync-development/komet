@@ -146,12 +146,13 @@ export default class AppStore {
 			this.setToken(token);
 		} else {
 			this.logger.debug("No token found in storage.");
+			this.isAppLoading = false;
 			this.setGatewayReady(true);
 		}
 	}
 
 	@action
-	logout() {
+	logout = () => {
 		this.token = null;
 		this.tokenLoaded = false;
 		this.isAppLoading = false;
@@ -189,5 +190,6 @@ export default class AppStore {
 		this.loadFpsShown();
 		this.loadToken();
 		this.loadUpdaterEnabled();
+		this.theme.loadBackgroundGifUrl();
 	}
 }

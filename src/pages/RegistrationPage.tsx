@@ -1,5 +1,5 @@
 import { useInstanceValidation } from "@/hooks/useInstanceValidation";
-import SpacebarLogoBlue from "@assets/images/logo/Logo-Blue.svg?react";
+import KometLogoBlue from "@assets/images/logo/Komet-Logo-Blue.svg?react";
 import {
 	AuthContainer,
 	AuthSwitchPageContainer,
@@ -15,8 +15,8 @@ import {
 	LabelWrapper,
 	SubHeader,
 	SubmitButton,
-	Wrapper,
 } from "@components/AuthComponents";
+import { AnimatedBackground } from "@components/AnimatedBackground";
 import { TextDivider } from "@components/Divider";
 import DOBInput from "@components/DOBInput";
 import HCaptcha from "@components/HCaptcha";
@@ -176,16 +176,16 @@ function RegistrationPage() {
 	}
 
 	return (
-		<Wrapper>
+		<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
 			<AuthContainer>
 				{AUTH_NO_BRANDING ? (
 					<>
-						<Header>Create an account</Header>
+						<Header>Create your Komet account</Header>
 					</>
 				) : (
 					<>
-						<SpacebarLogoBlue height={48} width="auto" />
-						<SubHeader noBranding>Create an account</SubHeader>
+						<KometLogoBlue height={48} width="100%" />
+						<SubHeader noBranding>Create your Komet account</SubHeader>
 					</>
 				)}
 
@@ -326,7 +326,7 @@ function RegistrationPage() {
 					</InputContainer>
 
 					<SubmitButton palette="primary" type="submit" disabled={loading}>
-						Create Account
+						Create Komet Account
 					</SubmitButton>
 
 					<AuthSwitchPageContainer>
@@ -342,7 +342,7 @@ function RegistrationPage() {
 					</AuthSwitchPageContainer>
 				</FormContainer>
 			</AuthContainer>
-		</Wrapper>
+		</AnimatedBackground>
 	);
 }
 

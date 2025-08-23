@@ -5,12 +5,12 @@ use tauri::{
 };
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
-    let branding = MenuItem::with_id(app, "name", "Spacebar", false, None::<String>)?;
+    let branding = MenuItem::with_id(app, "name", "spacebar", false, None::<String>)?;
     let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<String>)?;
     let menu1 = Menu::with_items(app, &[&branding, &quit_i])?;
 
     let _ = TrayIconBuilder::with_id("main")
-        .tooltip("Spacebar")
+        .tooltip("spacebar")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&menu1)
         .menu_on_left_click(false)

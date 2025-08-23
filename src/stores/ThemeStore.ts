@@ -1,10 +1,27 @@
 import { ThemePresets, type Theme } from "@contexts/Theme";
 import { PresenceUpdateStatus } from "@spacebarchat/spacebar-api-types/v9";
-import { computed, makeAutoObservable } from "mobx";
+import { action, computed, makeAutoObservable, observable } from "mobx";
+import secureLocalStorage from "react-secure-storage";
 
 export default class ThemeStore {
+	@observable backgroundGifUrl: string | null = null;
+
 	constructor() {
 		makeAutoObservable(this);
+	}
+
+	@action
+	setBackgroundGifUrl(url: string) {
+		this.backgroundGifUrl = url;
+		secureLocalStorage.setItem("backgroundGifUrl", url);
+	}
+
+	@action
+	loadBackgroundGifUrl() {
+		const url = secureLocalStorage.getItem("backgroundGifUrl") as string | null;
+		if (url) {
+			this.backgroundGifUrl = url;
+		}
 	}
 
 	@computed

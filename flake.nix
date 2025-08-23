@@ -1,5 +1,5 @@
 {
-  description = "Spacebar client, written in React.";
+  description = "spacebar client, written in React.";
 
   #inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
   inputs.flake-utils.url = "github:numtide/flake-utils";

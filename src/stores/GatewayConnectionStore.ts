@@ -239,7 +239,7 @@ export default class GatewayConnectionStore {
 				token: this.app.token!,
 				capabilities: 16381,
 				properties: {
-					browser: "Spacebar Web",
+					browser: "spacebar Web",
 					client_build_number: 0,
 					release_channel: "dev",
 					browser_user_agent: navigator.userAgent,
