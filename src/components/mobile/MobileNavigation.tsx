@@ -75,10 +75,10 @@ const MobileNavigation: React.FC = () => {
 			active: location.pathname === '/channels/@me'
 		},
 		{
-			label: 'Servers',
-			icon: 'mdiViewGrid',
-			path: '/servers',
-			active: location.pathname.startsWith('/servers')
+			label: 'Discovery',
+			icon: 'mdiCompass',
+			path: '/discovery',
+			active: location.pathname === '/discovery'
 		},
 		{
 			label: 'Friends',

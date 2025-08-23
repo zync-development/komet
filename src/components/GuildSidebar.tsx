@@ -65,7 +65,7 @@ function GuildSidebar() {
 
 	const navigate = useNavigate();
 	const { all } = app.guilds;
-	const itemCount = all.length + 3; // add the home button, divider, and add server button
+	const itemCount = all.length + 4; // add the home button, divider, discovery button, and add server button
 
 	const rowRenderer = ({ index, key, style }: ListRowProps) => {
 		let element: React.ReactNode;
@@ -91,6 +91,22 @@ function GuildSidebar() {
 					<Divider key="divider" />
 				</GuildSidebarListItem>
 			);
+		} else if (index === 2) {
+			// discovery button
+			element = (
+				<SidebarAction
+					key="discovery"
+					tooltip="Server Discovery"
+					icon={{
+						icon: "mdiCompass",
+						size: "24px",
+						color: "var(--primary)",
+					}}
+					action={() => navigate("/discovery")}
+					margin={false}
+					active={window.location.pathname === "/discovery"}
+				/>
+			);
 		} else if (index === itemCount - 1) {
 			// add server button/any other end items
 			element = (
@@ -114,7 +130,7 @@ function GuildSidebar() {
 			);
 		} else {
 			// regular guild item
-			const guild = all[index - 2];
+			const guild = all[index - 3];
 			element = <GuildItem key={key} guild={guild} />;
 		}
 

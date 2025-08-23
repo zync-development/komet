@@ -13,6 +13,7 @@ export { default as PresenceStore } from "./PresenceStore";
 export { default as PrivateChannelStore } from "./PrivateChannelStore";
 export { default as ReadStateStore } from "./ReadStateStore";
 export { default as RoleStore } from "./RoleStore";
+export { default as ServerDiscoveryStore } from "./ServerDiscoveryStore";
 export { default as ThemeStore } from "./ThemeStore";
 export { default as UpdaterStore } from "./UpdaterStore";
 export { default as UserStore } from "./UserStore";

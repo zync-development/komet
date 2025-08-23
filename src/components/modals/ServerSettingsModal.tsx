@@ -8,6 +8,10 @@ import styled from "styled-components";
 import { Modal } from "./ModalComponents";
 import { Routes } from "@spacebarchat/spacebar-api-types/v9";
 import { ChannelType } from "@spacebarchat/spacebar-api-types/v9";
+import CreateRoleModal from "./CreateRoleModal";
+import EditRoleModal from "./EditRoleModal";
+import DeleteRoleModal from "./DeleteRoleModal";
+import CreateInviteModal from "./CreateInviteModal";
 
 // Main container
 const Container = styled.div`
@@ -350,72 +354,138 @@ const RolesContent = styled.div`
 	padding: 24px;
 `;
 
-const RoleTabs = styled.div`
-	display: flex;
-	gap: 8px;
-	margin-bottom: 24px;
-`;
-
-const RoleTab = styled.button<{ active?: boolean }>`
-	padding: 8px 16px;
-	background: ${props => props.active ? 'var(--background-secondary)' : 'transparent'};
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
-	color: var(--text);
-	font-size: 14px;
-	cursor: pointer;
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: var(--background-secondary);
-	}
-`;
-
-const CreateRoleButton = styled.button`
-	padding: 8px 16px;
-	background: var(--background-secondary);
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
-	color: var(--text);
-	font-size: 14px;
-	cursor: pointer;
-	margin-bottom: 24px;
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: var(--background-tertiary);
-	}
-`;
-
-const PermissionItem = styled.div`
+const SectionHeader = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 12px 0;
-	border-bottom: 1px solid var(--background-tertiary);
+	margin-bottom: 24px;
 `;
 
-const PermissionInfo = styled.div`
-	flex: 1;
-`;
-
-const PermissionName = styled.div`
-	color: var(--text);
+const CreateRoleButton = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	background: var(--primary);
+	border: none;
+	border-radius: 6px;
+	color: white;
 	font-size: 14px;
 	font-weight: 500;
-	margin-bottom: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background: var(--primary-hover);
+	}
 `;
 
-const PermissionDescription = styled.div`
-	color: var(--text-secondary);
+const RolesList = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+`;
+
+const RoleItem = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 12px;
+	border-radius: 4px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-tertiary);
+`;
+
+const RoleInfo = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+`;
+
+const RoleColor = styled.div<{ color: string }>`
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background-color: ${props => props.color};
+`;
+
+const RoleDetails = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+const RoleName = styled.span`
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text);
+`;
+
+const RoleMemberCount = styled.span`
 	font-size: 12px;
-	line-height: 1.4;
+	color: var(--text-secondary);
 `;
 
-const PermissionCheckbox = styled.input`
-	width: 18px;
-	height: 18px;
-	accent-color: var(--primary);
+const RoleActions = styled.div`
+	display: flex;
+	gap: 8px;
+`;
+
+const RoleActionButton = styled.button<{ danger?: boolean }>`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	background: ${props => props.danger ? 'var(--error)' : 'var(--background-tertiary)'};
+	color: ${props => props.danger ? 'white' : 'var(--text)'};
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background: ${props => props.danger ? 'var(--error-hover)' : 'var(--background-primary)'};
+	}
+`;
+
+// Invites section styles
+const InvitesContent = styled.div`
+	padding: 24px;
+`;
+
+const CreateInviteButton = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	background: var(--primary);
+	border: none;
+	border-radius: 6px;
+	color: white;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background: var(--primary-hover);
+	}
+`;
+
+const InvitesList = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+`;
+
+const NoInvitesMessage = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 40px 0;
+	color: var(--text-muted);
+	font-size: 14px;
+	text-align: center;
 `;
 
 // Emojis section styles
@@ -604,28 +674,6 @@ const RolesSection = styled.div`
 	margin-top: 24px;
 `;
 
-// Invites section styles
-const InvitesContent = styled.div`
-	padding: 24px;
-`;
-
-const InviteHeaders = styled.div`
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 80px;
-	gap: 16px;
-	padding: 12px 0;
-	border-bottom: 1px solid var(--background-tertiary);
-	margin-bottom: 16px;
-`;
-
-const InviteHeader = styled.div`
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--text-secondary);
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-`;
-
 // Bans section styles
 const BansContent = styled.div`
 	padding: 24px;
@@ -648,6 +696,64 @@ const BanHeader = styled.div`
 	letter-spacing: 0.5px;
 `;
 
+const BanItem = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr 80px;
+	gap: 16px;
+	padding: 12px 0;
+	border-bottom: 1px solid var(--background-tertiary);
+	align-items: center;
+`;
+
+const BanUser = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+`;
+
+const BanAvatar = styled.div`
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--background-tertiary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text);
+	font-size: 14px;
+	font-weight: 500;
+`;
+
+const BanName = styled.span`
+	color: var(--text);
+	font-size: 14px;
+`;
+
+const BanReason = styled.span`
+	color: var(--text-secondary);
+	font-size: 14px;
+`;
+
+const BanActions = styled.div`
+	display: flex;
+	gap: 8px;
+`;
+
+const BanActionButton = styled.button`
+	padding: 6px 12px;
+	background: var(--background-tertiary);
+	border: none;
+	border-radius: 4px;
+	color: var(--text);
+	font-size: 12px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background: var(--background-primary);
+	}
+`;
+
 type SettingsSection = 'overview' | 'categories' | 'roles' | 'emojis' | 'members' | 'invites' | 'bans';
 
 function ServerSettingsModal(props: ModalProps<"server_settings">) {
@@ -667,6 +773,22 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 	const [newChannelName, setNewChannelName] = useState('');
 	const [newChannelType, setNewChannelType] = useState<ChannelType>(ChannelType.GuildText);
 	const [selectedCategoryForChannel, setSelectedCategoryForChannel] = useState<string | null>(null);
+
+	// Roles state
+	const [showCreateRoleModal, setShowCreateRoleModal] = useState(false);
+	const [editingRole, setEditingRole] = useState<any>(null);
+	const [deletingRole, setDeletingRole] = useState<any>(null);
+
+	// Invites state
+	const [showCreateInviteModal, setShowCreateInviteModal] = useState(false);
+	const [inviteCode, setInviteCode] = useState('');
+	const [inviter, setInviter] = useState<any>(null);
+	const [channel, setChannel] = useState<any>(null);
+	const [expiresAt, setExpiresAt] = useState<string | null>(null);
+	const [maxUses, setMaxUses] = useState<number | null>(null);
+	const [temporary, setTemporary] = useState<boolean | null>(null);
+	const [uses, setUses] = useState<number>(0);
+	const [createdAt, setCreatedAt] = useState<string>('');
 
 	// Get categories and channels
 	const categories = app.channels.all.filter(channel => 
@@ -875,6 +997,46 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 		setActiveSection(section);
 		setError(null); // Clear any errors when switching sections
 		setSuccess(false);
+	};
+
+	const handleEditRole = (role: any) => {
+		setEditingRole(role);
+	};
+
+	const handleDeleteRole = (role: any) => {
+		setDeletingRole(role);
+	};
+
+	const handleRoleCreated = () => {
+		setShowCreateRoleModal(false);
+		// Refresh roles list after creation
+		window.location.reload();
+	};
+
+	const handleRoleUpdated = () => {
+		setEditingRole(null);
+		// Refresh roles list after update
+		window.location.reload();
+	};
+
+	const handleRoleDeleted = () => {
+		setDeletingRole(null);
+		// Refresh roles list after deletion
+		window.location.reload();
+	};
+
+	const handleInviteCreated = (invite: any) => {
+		setShowCreateInviteModal(false);
+		setInviteCode(invite.code);
+		setInviter(invite.inviter);
+		setChannel(invite.channel);
+		setExpiresAt(invite.expires_at);
+		setMaxUses(invite.max_uses);
+		setTemporary(invite.temporary);
+		setUses(invite.uses);
+		setCreatedAt(invite.created_at);
+		// Refresh invites list after creation
+		window.location.reload();
 	};
 
 	const renderOverview = () => (
@@ -1492,159 +1654,71 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 
 	const renderRoles = () => (
 		<RolesContent>
-			<RoleTabs>
-				<RoleTab active>Default</RoleTab>
-				<RoleTab>Role Ranking</RoleTab>
-				<RoleTab>Save</RoleTab>
-			</RoleTabs>
-			
-			<CreateRoleButton>Create Role</CreateRoleButton>
+			<SectionHeader>
+				<SectionTitle>Roles</SectionTitle>
+				<CreateRoleButton onClick={() => setShowCreateRoleModal(true)}>
+					<Icon icon="mdiPlus" size={16} />
+					Create Role
+				</CreateRoleButton>
+			</SectionHeader>
 
-			<SectionTitle>Edit Permissions</SectionTitle>
-			
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Channels</PermissionName>
-					<PermissionDescription>Allows members to edit or delete a channel.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
+			{/* Roles List */}
+			<RolesList>
+				{guild.roles.map((role) => (
+					<RoleItem key={role.id}>
+						<RoleInfo>
+							<RoleColor color={role.color || '#99aab5'} />
+							<RoleDetails>
+								<RoleName>{role.name}</RoleName>
+								<RoleMemberCount>
+									Role ID: {role.id}
+								</RoleMemberCount>
+							</RoleDetails>
+						</RoleInfo>
+						<RoleActions>
+							<RoleActionButton onClick={() => handleEditRole(role)}>
+								<Icon icon="mdiPencil" size={16} />
+							</RoleActionButton>
+							{role.name !== '@everyone' && (
+								<RoleActionButton 
+									onClick={() => handleDeleteRole(role)}
+									danger
+								>
+									<Icon icon="mdiDelete" size={16} />
+								</RoleActionButton>
+							)}
+						</RoleActions>
+					</RoleItem>
+				))}
+			</RolesList>
 
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Server</PermissionName>
-					<PermissionDescription>Allows members to change this server's name, description, icon and other related information.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
+			{/* Create Role Modal */}
+			{showCreateRoleModal && (
+				<CreateRoleModal
+					guild={guild}
+					onClose={() => setShowCreateRoleModal(false)}
+					onRoleCreated={handleRoleCreated}
+				/>
+			)}
 
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Permissions</PermissionName>
-					<PermissionDescription>Allows members to change permissions for channels and roles with a lower ranking.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
+			{/* Edit Role Modal */}
+			{editingRole && (
+				<EditRoleModal
+					role={editingRole}
+					guild={guild}
+					onClose={() => setEditingRole(null)}
+					onRoleUpdated={handleRoleUpdated}
+				/>
+			)}
 
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Roles</PermissionName>
-					<PermissionDescription>Allows members to create, edit and delete roles with a lower rank than theirs. Also allows them to modify role permissions on channels.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Customization</PermissionName>
-					<PermissionDescription>Allows members to create, edit and delete emojis.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Kick Members</PermissionName>
-					<PermissionDescription>Allows members to remove members from this server. Kicked members may rejoin with an invite.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Ban Members</PermissionName>
-					<PermissionDescription>Allows members to permanently remove members from this server.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Timeout Members</PermissionName>
-					<PermissionDescription>Allows members to temporarily prevent users from interacting with the server.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Assign Roles</PermissionName>
-					<PermissionDescription>Allows members to assign roles below their own rank to other members.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Change Nickname</PermissionName>
-					<PermissionDescription>Allows members to change their nickname on this server.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Nicknames</PermissionName>
-					<PermissionDescription>Allows members to change the nicknames of other members.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Change Avatar</PermissionName>
-					<PermissionDescription>Allows members to change their server avatar on this server.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Remove Avatars</PermissionName>
-					<PermissionDescription>Allows members to remove the server avatars of other members on this server.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>View Channel</PermissionName>
-					<PermissionDescription>Allows members to view any channels they have this permission on.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Send Messages</PermissionName>
-					<PermissionDescription>Allows members to send messages in text channels.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Manage Messages</PermissionName>
-					<PermissionDescription>Allows members to delete messages sent by other members.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Invite Others</PermissionName>
-					<PermissionDescription>Allows members to invite other users to a channel.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
-
-			<PermissionItem>
-				<PermissionInfo>
-					<PermissionName>Send Embeds</PermissionName>
-					<PermissionDescription>Allows members to send embedded content, whether from links or custom.</PermissionDescription>
-				</PermissionInfo>
-				<PermissionCheckbox type="checkbox" defaultChecked />
-			</PermissionItem>
+			{/* Delete Role Confirmation */}
+			{deletingRole && (
+				<DeleteRoleModal
+					role={deletingRole}
+					onClose={() => setDeletingRole(null)}
+					onRoleDeleted={handleRoleDeleted}
+				/>
+			)}
 		</RolesContent>
 	);
 
@@ -1710,13 +1784,32 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 
 	const renderInvites = () => (
 		<InvitesContent>
-			<InviteHeaders>
-				<InviteHeader>Invite Code</InviteHeader>
-				<InviteHeader>Inviter</InviteHeader>
-				<InviteHeader>Channel</InviteHeader>
-				<InviteHeader>Revoke</InviteHeader>
-			</InviteHeaders>
-			{/* No invites to display */}
+			<SectionHeader>
+				<SectionTitle>Invites</SectionTitle>
+				<CreateInviteButton onClick={() => setShowCreateInviteModal(true)}>
+					<Icon icon="mdiPlus" size={16} />
+					Create Invite
+				</CreateInviteButton>
+			</SectionHeader>
+
+			{/* Invites List */}
+			<InvitesList>
+				{/* Placeholder for existing invites - will be populated when API is ready */}
+				<NoInvitesMessage>
+					<Icon icon="mdiEmailOutline" size={48} />
+					<h3>No invites yet</h3>
+					<p>Create your first invite to start inviting people to your server!</p>
+				</NoInvitesMessage>
+			</InvitesList>
+
+			{/* Create Invite Modal */}
+			{showCreateInviteModal && (
+				<CreateInviteModal
+					guild={guild}
+					onClose={() => setShowCreateInviteModal(false)}
+					onInviteCreated={handleInviteCreated}
+				/>
+			)}
 		</InvitesContent>
 	);
 

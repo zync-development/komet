@@ -15,6 +15,7 @@ import LogoutPage from "./pages/LogoutPage";
 import NotFoundPage from "./pages/NotFound";
 import RegistrationPage from "./pages/RegistrationPage";
 import FriendsPage from "./pages/FriendsPage";
+import ServerDiscoveryPage from "./pages/ServerDiscoveryPage";
 import ChannelPage from "./pages/subpages/ChannelPage";
 import { Globals } from "./utils/Globals";
 // @ts-expect-error no types
@@ -119,6 +120,7 @@ function App() {
 						<Route path="/logout" element={<AuthenticationGuard component={LogoutPage} />} />
 						<Route path="/invite/:code" element={<InvitePage />} />
 						<Route path="/friends" element={<AuthenticationGuard component={FriendsPage} />} />
+						<Route path="/discovery" element={<AuthenticationGuard component={ServerDiscoveryPage} />} />
 						<Route path="*" element={<NotFoundPage />} />
 					</Routes>
 				</Loader>

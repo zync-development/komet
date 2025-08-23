@@ -18,6 +18,7 @@ import {
 	ThemeStore,
 	UpdaterStore,
 	UserStore,
+	ServerDiscoveryStore,
 } from "@stores";
 import { Channel, Guild } from "@structures";
 import EmojiStore from "./EmojiStore";
@@ -52,6 +53,7 @@ export default class AppStore {
 	@observable presences = new PresenceStore(this);
 	@observable readStateStore = new ReadStateStore(this);
 	@observable queue = new MessageQueue(this);
+	@observable serverDiscovery = new ServerDiscoveryStore(this);
 	@observable updaterStore: UpdaterStore | null = null;
 
 	@observable activeGuild: Guild | null = null;

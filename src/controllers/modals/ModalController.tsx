@@ -4,7 +4,6 @@ import {
 	AddFriendModal,
 	AddServerModal,
 	BanMemberModal,
-	CreateChannelModel,
 	CreateInviteModal,
 	CreateServerModal,
 	DeleteMessageModal,
@@ -18,6 +17,7 @@ import {
 	SettingsModal,
 	CreateCategoryModal,
 	DeleteChannelModal,
+	CreateChannelModel,
 } from "@components/modals";
 import { action, computed, makeObservable, observable } from "mobx";
 import { Modal } from "./types";
