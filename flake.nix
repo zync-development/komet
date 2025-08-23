@@ -1,5 +1,5 @@
 {
-  description = "spacebar client, written in React.";
+  description = "komet client, written in React.";
 
   #inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -18,9 +18,9 @@
 	in rec {
 		#packages.default = _pnpm2nix.mkPnpmPackage {
 		packages.default = pkgs.buildNpmPackage {
-			pname = "spacebar-client-react";
+			pname = "komet-client-react";
 			src = ./.;
-			name = "spacebar-client-react";
+			name = "komet-client-react";
 			#buildInputs = with pkgs; [ ];
 			npmDepsHash = "sha256-BAsUdPWJk8/QVaRjOELusOf3TGoft4o90FJ11ef3xJE=";
 			makeCacheWritable = true;

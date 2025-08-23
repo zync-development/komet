@@ -1,4 +1,4 @@
-import kometLogoBlue from "@assets/images/logo/Komet-Logo-Blue.svg?react";
+
 import Button from "@components/Button";
 import Container from "@components/Container";
 import { useAppStore } from "@hooks/useAppStore";
@@ -15,15 +15,7 @@ const Wrapper = styled.div`
 	flex: 1;
 `;
 
-const KometLogo = styled(kometLogoBlue)`
-	width: 80vw;
-	height: min-content;
-	margin-bottom: 32px;
 
-	@media (min-width: 768px) {
-		width: 40vw;
-	}
-`;
 
 function LoadingPage() {
 	const app = useAppStore();
@@ -34,9 +26,8 @@ function LoadingPage() {
 				flex: 1,
 			}}
 		>
-			<Wrapper>
-				<KometLogo />
-				<PulseLoader color="var(--text)" />
+					<Wrapper>
+			<PulseLoader color="var(--text)" />
 				{app.token && (
 					<div
 						style={{

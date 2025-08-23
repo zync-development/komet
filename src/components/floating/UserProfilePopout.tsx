@@ -5,7 +5,7 @@ import { GuildMember, User } from "@structures";
 import { REST, Snowflake } from "@utils";
 import styled from "styled-components";
 
-import kometLogoBlue from "@assets/images/logo/Komet_Icon.svg?react";
+import KometLogoBlue from "@assets/images/logo/Komet_Icon.svg?react";
 import { useAppStore } from "@hooks/useAppStore";
 import { CDNRoutes, ImageFormat } from "@spacebarchat/spacebar-api-types/v9";
 import dayjs from "dayjs";
@@ -218,7 +218,7 @@ function UserProfilePopout({ user, member }: Props) {
 						>
 							<FloatingTrigger>
 								<div>
-									<kometLogoBlue width={16} height={16} style={{ borderRadius: "50%" }} />
+									<KometLogoBlue width={16} height={16} style={{ borderRadius: "50%" }} />
 								</div>
 							</FloatingTrigger>
 						</Floating>

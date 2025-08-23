@@ -12,14 +12,34 @@ export const Wrapper = styled(Container)`
 `;
 
 export const AuthContainer = styled(Container)`
-	background-color: var(--background-primary-alt);
-	padding: 24px;
+	background: rgba(32, 34, 37, 0.8);
+	backdrop-filter: blur(25px) saturate(180%);
+	-webkit-backdrop-filter: blur(25px) saturate(180%);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 16px;
+	box-shadow: 
+		0 8px 32px rgba(0, 0, 0, 0.3),
+		0 0 0 1px rgba(255, 255, 255, 0.05),
+		inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	padding: 20px;
 	font-size: 16px;
 	color: var(--text-muted);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+	}
 
 	@media (max-width: 480px) {
 		width: 100%;
@@ -27,7 +47,8 @@ export const AuthContainer = styled(Container)`
 		justify-content: center;
 	}
 	@media (min-width: 480px) {
-		width: 400px;
+		width: 350px;
+		height: 100;
 		border-radius: 16px;
 	}
 `;
@@ -62,11 +83,10 @@ export const InputContainer = styled.h1<{ marginBottom: boolean }>`
 	align-items: flex-start;
 `;
 
-export const LabelWrapper = styled.div<{ error?: boolean }>`
+export const LabelWrapper = styled.div<{ error?: boolean; isPassword?: boolean }>`
 	display: flex;
 	flex-direction: row;
 	margin-bottom: 8px;
-	color: ${(props) => (props.error ? "var(--error)" : "var(--text-header-secondary)")};
 `;
 
 export const InputErrorText = styled.label`
@@ -78,9 +98,10 @@ export const InputErrorText = styled.label`
 	white-space: nowrap;
 `;
 
-export const InputLabel = styled.label`
+export const InputLabel = styled.label<{ isPassword?: boolean }>`
 	font-size: 14px;
 	font-weight: var(--font-weight-bold);
+	color: ${(props) => props.isPassword ? 'white' : 'rgba(255, 255, 255, 0.7)'};
 `;
 
 export const InputWrapper = styled.div`
@@ -90,31 +111,54 @@ export const InputWrapper = styled.div`
 
 export const Input = styled.input<{ error?: boolean; disableFocusRing?: boolean }>`
 	outline: none;
-	background: var(--background-secondary);
-	padding: 10px;
-	font-size: 16px;
-	flex: 1;
-	border-radius: 12px;
-	color: var(--text);
-	margin: 0;
+	background: #2C2C2C;
 	border: none;
-	aria-invalid: ${(props) => (props.error ? "true" : "false")};
-	border: ${(props) => (props.error ? "1px solid var(--error)" : "1px solid var(--background-secondary)")};
+	border-radius: 6px;
+	padding: 12px 16px;
+	font-size: 16px;
+	width: 100%;
+	color: white;
+	margin: 0;
+	box-sizing: border-box;
+	box-shadow: none;
+
+	&::placeholder {
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	&:focus {
+		outline: none;
+		border: none;
+		box-shadow: none;
+	}
+
+	/* Override browser autocomplete styling */
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	&:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0 30px #2C2C2C inset !important;
+		-webkit-text-fill-color: white !important;
+		background-color: #2C2C2C !important;
+	}
+
+	/* Firefox autocomplete override */
+	&:-moz-autofill {
+		background-color: #2C2C2C !important;
+		color: white !important;
+	}
 
 	${(props) =>
-		!props.disableFocusRing &&
+		props.error &&
 		`
-		&:focus {
-			border: 1px solid var(--primary);
-		}
+		background: #2C2C2C;
+		border: none;
+		box-shadow: none;
 	`}
 
-	// disabled styling
 	&:disabled {
-		// TODO: this might need to be adjusted
-		background: var(--background-primary-alt);
-		color: var(--text-disabled);
-		border: 1px solid var(--background-secondary-alt);
+		background: #2C2C2C;
+		color: rgba(255, 255, 255, 0.4);
 		cursor: not-allowed;
 	}
 
@@ -148,7 +192,34 @@ export const SubmitButton = styled(Button)`
 	width: 100%;
 	min-width: 130px;
 	min-height: 44px;
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: 600;
+	background: #2C2C2C;
+	border: none;
+	border-radius: 6px;
+	color: white;
+	box-shadow: none;
+	transition: none;
+
+	&:hover:not(:disabled) {
+		background: #2C2C2C;
+		box-shadow: none;
+		transform: none;
+	}
+
+	&:active:not(:disabled) {
+		background: #2C2C2C;
+		transform: none;
+		box-shadow: none;
+	}
+
+	&:disabled {
+		background: #2C2C2C;
+		color: rgba(255, 255, 255, 0.4);
+		cursor: not-allowed;
+		transform: none;
+		box-shadow: none;
+	}
 `;
 
 export const AuthSwitchPageContainer = styled.div`

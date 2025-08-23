@@ -13,7 +13,11 @@ export type Modal = {
 	key?: string;
 } & (
 	| {
-			type: "add_server" | "create_server" | "join_server" | "settings";
+			type: "add_server" | "add_friend" | "create_server" | "join_server" | "settings";
+	  }
+	| {
+			type: "server_settings";
+			target: Guild;
 	  }
 	| {
 			type: "error";
@@ -32,7 +36,7 @@ export type Modal = {
 	  }
 	| {
 			type: "kick_member";
-			target: GuildMember;
+		target: GuildMember;
 	  }
 	| {
 			type: "ban_member";

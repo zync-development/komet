@@ -197,8 +197,8 @@ export function CreateInviteModal({ target, ...props }: ModalProps<"create_invit
 							onChange={handleAgeChange}
 							value={maxAge.value}
 						>
-							{Object.entries(ExpiryOptions).map(([_, b]) => (
-								<InputSelectOption value={b.value}>{b.label}</InputSelectOption>
+							{Object.entries(ExpiryOptions).map(([key, b]) => (
+								<InputSelectOption key={key} value={b.value}>{b.label}</InputSelectOption>
 							))}
 						</InputSelect>
 					</InputWrapper>
@@ -214,8 +214,8 @@ export function CreateInviteModal({ target, ...props }: ModalProps<"create_invit
 							onChange={handleMaxUsesChange}
 							value={maxUses.value}
 						>
-							{Object.entries(MaxUsesOptions).map(([_, b]) => (
-								<InputSelectOption value={b.value}>{b.label}</InputSelectOption>
+							{Object.entries(MaxUsesOptions).map(([key, b]) => (
+								<InputSelectOption key={key} value={b.value}>{b.label}</InputSelectOption>
 							))}
 						</InputSelect>
 					</InputWrapper>

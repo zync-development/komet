@@ -1,5 +1,21 @@
-import kometLogoBlue from "@assets/images/logo/Komet-Logo-Blue.svg?react";
+import KometLogoBlue from "@assets/images/logo/Komet-Logo-Blue.svg?react";
 import { AnimatedBackground } from "@components/AnimatedBackground";
+import {
+	AuthContainer,
+	FormContainer,
+	Header,
+	HeaderContainer,
+	Input,
+	InputContainer,
+	InputErrorText,
+	InputLabel,
+	InputWrapper,
+	LabelWrapper,
+	Link,
+	SubHeader,
+	SubmitButton,
+	Wrapper,
+} from "@components/AuthComponents";
 import { useAppStore } from "@hooks/useAppStore";
 import { TextDivider } from "@components/Divider";
 import useLogger from "@hooks/useLogger";
@@ -83,10 +99,11 @@ function MFA(props: Props) {
 	});
 
 	return (
-		<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
-			<AuthContainer>
+		<Wrapper>
+			<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
+				<AuthContainer>
 				<HeaderContainer>
-					<kometLogoBlue height={48} width="100%" />
+					<KometLogoBlue height={48} width="100%" />
 					<Header>Two-factor authentication</Header>
 					<SubHeader>You can use a backup code or your two-factor authentication mobile app.</SubHeader>
 
@@ -136,8 +153,9 @@ function MFA(props: Props) {
 						</Link>
 					</FormContainer>
 				</HeaderContainer>
-			</AuthContainer>
-		</AnimatedBackground>
+							</AuthContainer>
+			</AnimatedBackground>
+		</Wrapper>
 	);
 }
 

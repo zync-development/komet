@@ -109,7 +109,7 @@ class BannerController<T extends Banner> {
 					const Component = this.components[banner.type];
 					if (!Component) return null;
 					return (
-						<AnimatePresence>
+						<AnimatePresence key={banner.key}>
 							<Container
 								variants={{
 									show: {

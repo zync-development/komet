@@ -55,8 +55,8 @@ function MemberList() {
 							<ListSection
 								key={i}
 								name={category.name}
-								items={category.items.map((x) => (
-									<MemberListItem item={x} />
+								items={category.items.map((x, j) => (
+									<MemberListItem key={j} item={x} />
 								))}
 							/>
 					  ))

@@ -107,7 +107,7 @@ function ExperimentsPage() {
 			<Content>
 				<ExperimentList>
 					{EXPERIMENT_LIST.map((experiment) => (
-						<ExperimentItem experiment={experiment} />
+						<ExperimentItem key={experiment.id} experiment={experiment} />
 					))}
 				</ExperimentList>
 			</Content>

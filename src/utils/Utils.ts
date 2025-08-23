@@ -234,7 +234,7 @@ export function zoomFit(width: number, height: number) {
  * @returns True if the string contains one or more invites
  */
 export function textHasInvite(text: string) {
-	return DISCORD_INVITE_REGEX.test(text) || spacebar_INVITE_REGEX.test(text);
+	return DISCORD_INVITE_REGEX.test(text) || komet_INVITE_REGEX.test(text);
 }
 
 /**
@@ -250,7 +250,7 @@ export function extractInvites(text: string): string[] {
 	// 	if (match.groups?.code) invites.push({ host: "discord.com", code: match.groups?.code || "" });
 	// }
 
-	while ((match = spacebar_INVITE_REGEX.exec(text))) {
+	while ((match = komet_INVITE_REGEX.exec(text))) {
 		if (match.groups?.code) invites.push(match.groups?.code);
 	}
 

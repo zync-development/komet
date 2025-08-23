@@ -1,5 +1,5 @@
 {
-	"author": "spacebar",
+	"author": "komet",
 	"bugs": {
 		"url": "https://github.com/spacebarchat/client/issues"
 	},
@@ -103,9 +103,9 @@
 		"vite-plugin-progress": "^0.0.7",
 		"vite-plugin-svgr": "^4.3.0"
 	},
-	"homepage": "https://spacebar.chat",
+	"homepage": "https://komet.chat",
 	"license": "AGPL-3.0-only",
-	"name": "spacebar-client",
+	"name": "komet-client",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/spacebarchat/client.git"

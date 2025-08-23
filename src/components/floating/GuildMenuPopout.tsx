@@ -44,9 +44,16 @@ function GuildMenuPopout() {
 		});
 	}
 
+	function onServerSettingsClick() {
+		modalController.push({
+			type: "server_settings",
+			target: activeGuild!,
+		});
+	}
+
 	return (
 		<CustomContextMenu>
-			<ContextMenuButton icon="mdiCog" disabled>
+			<ContextMenuButton icon="mdiCog" onClick={onServerSettingsClick}>
 				Server Settings
 			</ContextMenuButton>
 			{hasCreateChannelPermission && (

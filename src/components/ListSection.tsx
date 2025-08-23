@@ -49,10 +49,9 @@ function ListSection(props: Props) {
 				{props.name}
 			</Title>
 			<Wrapper open={open}>
-				{/* {props.items.map((item, i) => (
+				{props.items.map((item, i) => (
 					<Item key={i}>{item}</Item>
-				))} */}
-				{...props.items}
+				))}
 			</Wrapper>
 		</Container>
 	);

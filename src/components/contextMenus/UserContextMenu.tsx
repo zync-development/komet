@@ -51,7 +51,15 @@ function UserContextMenu({ user, member }: MenuProps) {
 			<ContextMenuButton disabled>Message</ContextMenuButton>
 			<ContextMenuDivider />
 			{member && <ContextMenuButton disabled>Change Nickname</ContextMenuButton>}
-			<ContextMenuButton disabled>Add Friend</ContextMenuButton>
+			<ContextMenuButton 
+				onClick={() => {
+					modalController.push({
+						type: "add_friend",
+					});
+				}}
+			>
+				Find User
+			</ContextMenuButton>
 			<ContextMenuButton disabled>Block</ContextMenuButton>
 			<ContextMenuDivider />
 			{member && guildMe && (

@@ -93,7 +93,7 @@ function GuildSidebar() {
 			element = <GuildItem key={key} guild={guild} />;
 		}
 
-		return <div style={style}>{element}</div>;
+		return <div key={key} style={style}>{element}</div>;
 	};
 
 	return (

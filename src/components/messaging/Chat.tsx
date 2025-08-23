@@ -1,4 +1,6 @@
 import MemberList from "@components/MemberList/MemberList";
+import Button from "@components/Button";
+import { modalController } from "@/controllers/modals";
 import { useAppStore } from "@hooks/useAppStore";
 import useLogger from "@hooks/useLogger";
 import { Channel, Guild } from "@structures";
@@ -99,14 +101,76 @@ function Chat() {
 	if (activeGuildId && activeGuildId === "@me") {
 		return (
 			<WrapperTwo>
-				<span
+				<div
 					style={{
-						padding: "1rem",
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						justifyContent: "center",
+						height: "100%",
+						padding: "2rem",
+						textAlign: "center",
 						userSelect: "none",
 					}}
 				>
-					Home Section Placeholder
-				</span>
+					<div
+						style={{
+							fontSize: "3rem",
+							marginBottom: "1rem",
+							animation: "wave 2s ease-in-out infinite",
+						}}
+					>
+						👋
+					</div>
+					<h1
+						style={{
+							fontSize: "2.5rem",
+							fontWeight: "bold",
+							color: "var(--text)",
+							margin: "0 0 0.5rem 0",
+						}}
+					>
+						Welcome back, {app.account?.username || "User"}!
+					</h1>
+					<p
+						style={{
+							fontSize: "1.2rem",
+							color: "var(--text-muted)",
+							margin: "0 0 2rem 0",
+							opacity: 0.8,
+						}}
+					>
+						Ready to chat with your friends?
+						<br />
+						Please note that this app is in a very early stage of development. So many features are not yet implemented.
+						<br />
+						We are working hard on fixing many bugs and adding new features.
+					</p>
+					<Button
+						palette="primary"
+						size="large"
+						onClick={() => {
+							modalController.push({
+								type: "add_friend",
+							});
+						}}
+						style={{
+							fontSize: "1.1rem",
+							padding: "12px 24px",
+						}}
+					>
+						Find Users
+					</Button>
+					<style>
+						{`
+							@keyframes wave {
+								0%, 100% { transform: rotate(0deg); }
+								25% { transform: rotate(20deg); }
+								75% { transform: rotate(-10deg); }
+							}
+						`}
+					</style>
+				</div>
 			</WrapperTwo>
 		);
 	}

@@ -247,7 +247,7 @@ function LoginPage() {
 
 					<InputContainer marginBottom>
 						<LabelWrapper error={!!errors.login}>
-							<InputLabel>Email</InputLabel>
+							<InputLabel>Please enter your email.</InputLabel>
 							{errors.login && (
 								<InputErrorText>
 									<>
@@ -260,7 +260,7 @@ function LoginPage() {
 						<InputWrapper>
 							<Input
 								type="email"
-								placeholder="Email"
+								placeholder="Please enter your email."
 								autoFocus
 								{...register("login", { required: true })}
 								error={!!errors.login}
@@ -271,7 +271,7 @@ function LoginPage() {
 
 					<InputContainer marginBottom>
 						<LabelWrapper error={!!errors.password}>
-							<InputLabel>Password</InputLabel>
+							<InputLabel isPassword={true}>PASSWORD</InputLabel>
 							{errors.password && (
 								<InputErrorText>
 									<>
@@ -284,7 +284,7 @@ function LoginPage() {
 						<InputWrapper>
 							<Input
 								type="password"
-								placeholder="Password"
+								placeholder="Enter your password."
 								{...register("password", { required: true })}
 								error={!!errors.password}
 								disabled={loading}

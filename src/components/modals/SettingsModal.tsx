@@ -11,6 +11,7 @@ import { Modal } from "./ModalComponents";
 import AccountSettingsPage from "./SettingsPages/AccountSettingsPage";
 import DeveloperSettingsPage from "./SettingsPages/DeveloperSettingsPage";
 import ExperimentsPage from "./SettingsPages/ExperimentsPage";
+import ThemeSettingsPage from "./SettingsPages/ThemeSettingsPage";
 
 const SidebarView = styled.div`
 	display: flex;

@@ -1,6 +1,7 @@
 // adapted from https://github.com/revoltchat/revite/blob/master/src/controllers/modals/ModalController.tsx
 
 import {
+	AddFriendModal,
 	AddServerModal,
 	BanMemberModal,
 	CreateChannelModel,
@@ -13,6 +14,7 @@ import {
 	JoinServerModal,
 	KickMemberModal,
 	LeaveServerModal,
+	ServerSettingsModal,
 	SettingsModal,
 } from "@components/modals";
 import { action, computed, makeObservable, observable } from "mobx";
@@ -142,7 +144,7 @@ class ModalControllerExtended extends ModalController<Modal> {
 
 export const modalController = new ModalControllerExtended({
 	add_server: AddServerModal,
-	// add_friend: AddFriend,
+	add_friend: AddFriendModal,
 	ban_member: BanMemberModal,
 	// changelog: Changelog,
 	// channel_info: ChannelInfo,
@@ -189,4 +191,5 @@ export const modalController = new ModalControllerExtended({
 	// modify_displayname: ModifyDisplayname,
 	// changelog_usernames: ChangelogUsernames,
 	settings: SettingsModal,
+	server_settings: ServerSettingsModal,
 });

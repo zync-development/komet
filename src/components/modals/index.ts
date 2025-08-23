@@ -1,3 +1,4 @@
+export * from "./AddFriendModal";
 export * from "./AddServerModal";
 export * from "./BanMemberModal";
 export * from "./CreateChannelModel";
@@ -13,4 +14,5 @@ export * from "./InviteUnauthedModal";
 export * from "./JoinServerModal";
 export * from "./KickMemberModal";
 export * from "./LeaveServerModal";
+export { default as ServerSettingsModal } from "./ServerSettingsModal";
 export * from "./SettingsModal";

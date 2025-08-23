@@ -1,7 +1,7 @@
 {
-	"productName": "spacebar",
+	"productName": "komet",
 	"version": "./version.json",
-	"identifier": "chat.spacebar.app",
+	"identifier": "chat.komet.app",
 	"build": {
 		"frontendDist": "../dist",
 		"devUrl": "http://localhost:1420",
@@ -32,7 +32,7 @@
 		"active": true,
 		"targets": ["deb", "rpm", "appimage", "nsis", "app", "dmg"],
 		"icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-		"publisher": "spacebar",
+		"publisher": "komet",
 		"category": "SocialNetworking",
 		"shortDescription": "A free, opensource self-hostable discord-compatible chat, voice and video platform.",
 		"licenseFile": "../LICENSE",

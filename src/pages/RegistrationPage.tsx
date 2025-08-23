@@ -272,7 +272,7 @@ function RegistrationPage() {
 
 					<InputContainer marginBottom>
 						<LabelWrapper error={!!errors.password}>
-							<InputLabel>Password</InputLabel>
+							<InputLabel isPassword={true}>PASSWORD</InputLabel>
 							{errors.password && (
 								<InputErrorText>
 									<>
@@ -285,7 +285,7 @@ function RegistrationPage() {
 						<InputWrapper>
 							<Input
 								type="password"
-								placeholder="Password"
+								placeholder="Enter your password."
 								{...register("password", { required: true })}
 								error={!!errors.password}
 								disabled={loading}

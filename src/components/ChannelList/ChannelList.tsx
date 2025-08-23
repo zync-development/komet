@@ -28,7 +28,7 @@ function ChannelList() {
 		const isCategory = item.type === ChannelType.GuildCategory;
 
 		return (
-			<div style={style}>
+			<div key={key} style={style}>
 				<ChannelListItem
 					key={key}
 					isCategory={isCategory}
