@@ -16,6 +16,8 @@ import {
 	LeaveServerModal,
 	ServerSettingsModal,
 	SettingsModal,
+	CreateCategoryModal,
+	DeleteChannelModal,
 } from "@components/modals";
 import { action, computed, makeObservable, observable } from "mobx";
 import { Modal } from "./types";
@@ -157,7 +159,8 @@ export const modalController = new ModalControllerExtended({
 	// delete_bot: Confirmation,
 	// block_user: Confirmation,
 	// unfriend_user: Confirmation,
-	// create_category: CreateCategory,
+	create_category: CreateCategoryModal,
+	delete_channel: DeleteChannelModal,
 	create_channel: CreateChannelModel,
 	// create_group: CreateGroup,
 	create_invite: CreateInviteModal,

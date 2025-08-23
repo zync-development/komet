@@ -9,6 +9,7 @@ export default class User {
 	@observable username: string;
 	@observable discriminator: string;
 	@observable avatar: string | null;
+
 	@observable bot = false;
 	@observable public_flags = 0;
 	@observable bio = "";
@@ -26,6 +27,7 @@ export default class User {
 		this.username = user.username;
 		this.discriminator = user.discriminator;
 		this.avatar = user.avatar;
+
 		if (user.bot) {
 			this.bot = user.bot;
 		}
@@ -52,6 +54,8 @@ export default class User {
 	update(member: APIUser | GatewayUserUpdateDispatchData) {
 		Object.assign(this, member);
 	}
+	
+
 
 	/**
 	 * Gets the users default avatar url

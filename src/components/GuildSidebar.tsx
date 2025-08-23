@@ -7,15 +7,20 @@ import { AutoSizer, List, ListRowProps } from "react-virtualized";
 import styled from "styled-components";
 import GuildItem, { GuildSidebarListItem } from "./GuildItem";
 import SidebarAction from "./SidebarAction";
+import { useMobile } from "@/contexts/MobileContext";
 
 const Container = styled.div`
 	display: flex;
 	flex: 0 0 72px;
 	margin: 4px 0 0 0;
+	position: relative;
 
-	// @media (max-width: 560px) {
-	// 	display: none;
-	// }
+	@media (max-width: 767px) {
+		flex: 0 0 60px;
+		margin: 2px 0 0 0;
+		background: var(--background-primary);
+		border-right: 1px solid var(--background-tertiary);
+	}
 
 	.ReactVirtualized__List {
 		scrollbar-width: none; /* Firefox */
@@ -28,6 +33,25 @@ const Container = styled.div`
 	}
 `;
 
+const MobileTouchIndicator = styled.div`
+	position: absolute;
+	top: 50%;
+	right: -2px;
+	transform: translateY(-50%);
+	width: 4px;
+	height: 40px;
+	background: var(--brand-560);
+	border-radius: 2px;
+	opacity: 0.7;
+	z-index: 15;
+	pointer-events: none;
+	display: none;
+
+	@media (max-width: 767px) {
+		display: block;
+	}
+`;
+
 const Divider = styled.div`
 	height: 2px;
 	width: 32px;
@@ -37,6 +61,7 @@ const Divider = styled.div`
 
 function GuildSidebar() {
 	const app = useAppStore();
+	const { isMobile } = useMobile();
 
 	const navigate = useNavigate();
 	const { all } = app.guilds;

@@ -8,14 +8,19 @@ import SwipeableLayout from "@components/SwipeableLayout";
 import { useAppStore } from "@hooks/useAppStore";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { isMobile } from "react-device-detect";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useMobile } from "@/contexts/MobileContext";
 
 const Container = styled(ContainerComponent)`
 	display: flex;
 	flex: 1;
 	flex-direction: column;
+	
+	@media (max-width: 767px) {
+		padding-top: 60px;
+		padding-bottom: 80px;
+	}
 `;
 
 const Wrapper = styled.div`
@@ -45,6 +50,7 @@ function RightPanel() {
 
 function ChannelPage() {
 	const app = useAppStore();
+	const { isMobile } = useMobile();
 
 	const { guildId, channelId } = useParams<{ guildId: string; channelId: string }>();
 

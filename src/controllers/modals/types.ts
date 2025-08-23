@@ -63,6 +63,14 @@ export type Modal = {
 			category?: Channel;
 	  }
 	| {
+			type: "create_category";
+			guild: Guild;
+	  }
+	| {
+			type: "delete_channel";
+			channel: Channel;
+	  }
+	| {
 			type: "invite";
 			inviteData: APIInvite;
 	  }

@@ -116,11 +116,15 @@ export default class Guild {
 	@action
 	update(data: APIGuild | GatewayGuild) {
 		if ("properties" in data) {
-			Object.assign(this, { ...data, ...data.properties });
+			// Filter out computed properties to avoid MobX errors
+			const { roles, channels, emojis, ...safeData } = data;
+			Object.assign(this, { ...safeData, ...safeData.properties });
 			return;
 		}
 
-		Object.assign(this, data);
+		// Filter out computed properties to avoid MobX errors
+		const { roles, channels, emojis, ...safeData } = data;
+		Object.assign(this, safeData);
 	}
 
 	@action
@@ -147,10 +151,8 @@ export default class Guild {
 		let guildChannels = this.app.channels.all.filter((channel) => this.channels_.has(channel.id));
 		guildChannels = guildChannels.filter((channel) => {
 			if (channel.type === ChannelType.GuildCategory) {
-				// check if any children are visible
-				return guildChannels.some(
-					(child) => child.parentId === channel.id && child.hasPermission("VIEW_CHANNEL"),
-				);
+				// Always show categories, even if they don't have children yet
+				return true;
 			}
 
 			return channel.hasPermission("VIEW_CHANNEL");

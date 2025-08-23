@@ -11,6 +11,8 @@ import { CDNRoutes, ImageFormat } from "@spacebarchat/spacebar-api-types/v9";
 import dayjs from "dayjs";
 import Floating from "./Floating";
 import FloatingTrigger from "./FloatingTrigger";
+import { modalController } from "@/controllers/modals";
+import Button from "@components/Button";
 
 const Container = styled.div`
 	background-color: #252525;
@@ -27,7 +29,12 @@ const Container = styled.div`
 const Top = styled.div`
 	display: flex;
 	flex-direction: column;
+	position: relative;
 `;
+
+
+
+
 
 const Bottom = styled.div`
 	display: flex;
@@ -153,6 +160,20 @@ const RoleName = styled.div`
 	max-width: 200px;
 `;
 
+const ActionSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px;
+`;
+
+const AddFriendButton = styled(Button)`
+	width: 100%;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 500;
+`;
+
 interface Props {
 	user: User;
 	member?: GuildMember;
@@ -165,12 +186,29 @@ function UserProfilePopout({ user, member }: Props) {
 	const id = user.id;
 	const { timestamp: createdAt } = Snowflake.deconstruct(id);
 	const presence = app.presences.get(user.id);
+	
+	// Check if this is the current user's profile
+	const isOwnProfile = app.account?.id === user.id;
+	
+
+	
+	const handleAddFriend = () => {
+		modalController.push({
+			type: "add_friend",
+		});
+	};
 
 	return (
 		<Container>
 			<Top>
+
 				<Avatar
-					style={{ margin: "22px 16px" }}
+					style={{ 
+						margin: "22px 16px",
+						marginTop: "-40px", // Overlap with banner
+						position: "relative",
+						zIndex: 1
+					}}
 					size={80}
 					onClick={(e) => {
 						e.preventDefault();
@@ -283,6 +321,18 @@ function UserProfilePopout({ user, member }: Props) {
 							))}
 						</RoleList>
 					</Section>
+				)}
+				
+				{!isOwnProfile && (
+					<ActionSection>
+						<AddFriendButton
+							palette="primary"
+							size="medium"
+							onClick={handleAddFriend}
+						>
+							Add Friend
+						</AddFriendButton>
+					</ActionSection>
 				)}
 			</Bottom>
 		</Container>

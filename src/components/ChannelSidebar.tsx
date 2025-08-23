@@ -13,6 +13,13 @@ const Wrapper = styled(Container)`
 	display: flex;
 	flex-direction: column;
 	background-color: var(--background-secondary);
+
+	@media (max-width: 767px) {
+		background-color: var(--background-primary);
+		border-right: 1px solid var(--background-tertiary);
+		width: 100%;
+		flex: 1;
+	}
 `;
 
 function ChannelSidebar() {

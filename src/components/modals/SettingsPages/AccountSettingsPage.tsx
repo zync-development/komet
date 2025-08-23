@@ -6,6 +6,7 @@ import { RESTPatchAPICurrentUserJSONBody, Routes } from "@spacebarchat/spacebar-
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
+import { modalController } from "@/controllers/modals";
 
 const Content = styled.div`
 	display: flex;
@@ -126,6 +127,10 @@ const Text = styled.p`
 	padding: 0;
 `;
 
+
+
+
+
 function AccountSettingsPage() {
 	const app = useAppStore();
 	const [shouldRedactEmail, setShouldRedactEmail] = useState(true);
@@ -148,6 +153,8 @@ function AccountSettingsPage() {
 		if (!event.target.files) return;
 		setSelectedFile(event.target.files[0]);
 	};
+	
+
 
 	const discardChanges = () => {
 		setSelectedFile(undefined);
@@ -194,6 +201,7 @@ function AccountSettingsPage() {
 		<div>
 			<SectionTitle>Account</SectionTitle>
 			<Content>
+
 				<UserInfoContainer>
 					<Field spacerBottom>
 						<IconContainer>

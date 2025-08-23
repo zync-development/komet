@@ -20,6 +20,11 @@ import MessageTextArea from "./MessageTextArea";
 const Container = styled.div`
 	padding: 0 16px;
 	margin-bottom: 25px;
+
+	@media (max-width: 767px) {
+		padding: 0 12px;
+		margin-bottom: 20px;
+	}
 `;
 
 const InnerWrapper = styled.div`
@@ -28,6 +33,11 @@ const InnerWrapper = styled.div`
 	border-radius: 10px;
 	display: flex;
 	flex-direction: column;
+
+	@media (max-width: 767px) {
+		padding: 0 12px;
+		border-radius: 8px;
+	}
 `;
 
 const InnerInnerWrapper = styled.div`

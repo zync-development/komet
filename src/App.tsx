@@ -14,6 +14,7 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import NotFoundPage from "./pages/NotFound";
 import RegistrationPage from "./pages/RegistrationPage";
+import FriendsPage from "./pages/FriendsPage";
 import ChannelPage from "./pages/subpages/ChannelPage";
 import { Globals } from "./utils/Globals";
 // @ts-expect-error no types
@@ -22,6 +23,8 @@ import AuthenticationGuard from "./components/AuthenticationGuard";
 import { useAppStore } from "./hooks/useAppStore";
 import InvitePage from "./pages/InvitePage";
 import { isTauri } from "./utils/Utils";
+import { MobileProvider } from "./contexts/MobileContext";
+import { MobileHeader, MobileNavigation } from "./components/mobile";
 
 function App() {
 	const app = useAppStore();
@@ -93,30 +96,35 @@ function App() {
 	}, [networkState]);
 
 	return (
-		<ErrorBoundary section="app">
-			{app.fpsShown && <FPSStats />}
-			<Loader>
-				<Routes>
-					<Route index path="/" element={<AuthenticationGuard component={AppPage} />} />
-					<Route path="/app" element={<AuthenticationGuard component={AppPage} />} />
-					<Route
-						path="/channels/:guildId/:channelId?"
-						element={<AuthenticationGuard component={ChannelPage} />}
-					/>
-					<Route
-						path="/login"
-						element={<AuthenticationGuard requireUnauthenticated component={LoginPage} />}
-					/>
-					<Route
-						path="/register"
-						element={<AuthenticationGuard requireUnauthenticated component={RegistrationPage} />}
-					/>
-					<Route path="/logout" element={<AuthenticationGuard component={LogoutPage} />} />
-					<Route path="/invite/:code" element={<InvitePage />} />
-					<Route path="*" element={<NotFoundPage />} />
-				</Routes>
-			</Loader>
-		</ErrorBoundary>
+		<MobileProvider>
+			<ErrorBoundary section="app">
+				{app.fpsShown && <FPSStats />}
+				<MobileHeader />
+				<Loader>
+					<Routes>
+						<Route index path="/" element={<AuthenticationGuard component={AppPage} />} />
+						<Route path="/app" element={<AuthenticationGuard component={AppPage} />} />
+						<Route
+							path="/channels/:guildId/:channelId?"
+							element={<AuthenticationGuard component={ChannelPage} />}
+						/>
+						<Route
+							path="/login"
+							element={<AuthenticationGuard requireUnauthenticated component={LoginPage} />}
+						/>
+						<Route
+							path="/register"
+							element={<AuthenticationGuard requireUnauthenticated component={RegistrationPage} />}
+						/>
+						<Route path="/logout" element={<AuthenticationGuard component={LogoutPage} />} />
+						<Route path="/invite/:code" element={<InvitePage />} />
+						<Route path="/friends" element={<AuthenticationGuard component={FriendsPage} />} />
+						<Route path="*" element={<NotFoundPage />} />
+					</Routes>
+				</Loader>
+				<MobileNavigation />
+			</ErrorBoundary>
+		</MobileProvider>
 	);
 }
 

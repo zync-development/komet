@@ -32,6 +32,10 @@ const WrapperTwo = styled.div`
 	background-color: var(--background-primary-alt);
 	flex: 1 1 auto;
 	overflow: hidden;
+
+	@media (max-width: 767px) {
+		background-color: var(--background-primary);
+	}
 `;
 
 const Container = styled.div`
@@ -134,7 +138,7 @@ function Chat() {
 					</h1>
 					<p
 						style={{
-							fontSize: "1.2rem",
+							fontSize: "1.1rem",
 							color: "var(--text-muted)",
 							margin: "0 0 2rem 0",
 							opacity: 0.8,
@@ -145,22 +149,10 @@ function Chat() {
 						Please note that this app is in a very early stage of development. So many features are not yet implemented.
 						<br />
 						We are working hard on fixing many bugs and adding new features.
+						
+						<br />
+						The files for this project will be on github soon also docs on how you can host your own server and version of this app.
 					</p>
-					<Button
-						palette="primary"
-						size="large"
-						onClick={() => {
-							modalController.push({
-								type: "add_friend",
-							});
-						}}
-						style={{
-							fontSize: "1.1rem",
-							padding: "12px 24px",
-						}}
-					>
-						Find Users
-					</Button>
 					<style>
 						{`
 							@keyframes wave {

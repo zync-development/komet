@@ -14,6 +14,7 @@ export default class AccountStore {
 	@observable username: string;
 	@observable discriminator: string;
 	@observable avatar: string | null;
+
 	@observable avatarDecoration?: unknown;
 	@observable email: string | null = null;
 	@observable verified = false;
@@ -83,4 +84,10 @@ export default class AccountStore {
 		if (this.avatar) return REST.makeCDNUrl(CDNRoutes.userAvatar(this.id, this.avatar, ImageFormat.PNG));
 		else return this.defaultAvatarUrl;
 	}
+	
+	/**
+	 * Update the user's banner
+	 * @param bannerUrl The new banner URL
+	 */
+
 }

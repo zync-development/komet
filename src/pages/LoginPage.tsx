@@ -241,6 +241,7 @@ function LoginPage() {
 								onChange={handleInstanceChange}
 								error={!!errors.instance}
 								disabled={loading}
+								autocomplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>
@@ -265,6 +266,7 @@ function LoginPage() {
 								{...register("login", { required: true })}
 								error={!!errors.login}
 								disabled={loading}
+								autocomplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>
@@ -288,6 +290,7 @@ function LoginPage() {
 								{...register("password", { required: true })}
 								error={!!errors.password}
 								disabled={loading}
+								autocomplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>

@@ -44,6 +44,13 @@ function GuildMenuPopout() {
 		});
 	}
 
+	function onCreateCategoryClick() {
+		modalController.push({
+			type: "create_category",
+			guild: activeGuild!,
+		});
+	}
+
 	function onServerSettingsClick() {
 		modalController.push({
 			type: "server_settings",
@@ -61,7 +68,7 @@ function GuildMenuPopout() {
 					<ContextMenuButton icon="mdiPlusCircle" onClick={onChannelCreateClick}>
 						Create Channel
 					</ContextMenuButton>
-					<ContextMenuButton icon="mdiFolderPlus" disabled>
+					<ContextMenuButton icon="mdiFolderPlus" onClick={onCreateCategoryClick}>
 						Create Category
 					</ContextMenuButton>
 				</>

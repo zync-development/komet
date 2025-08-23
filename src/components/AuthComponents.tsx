@@ -111,25 +111,32 @@ export const InputWrapper = styled.div`
 
 export const Input = styled.input<{ error?: boolean; disableFocusRing?: boolean }>`
 	outline: none;
-	background: #2C2C2C;
-	border: none;
-	border-radius: 6px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-secondary-alt);
+	border-radius: 8px;
 	padding: 12px 16px;
 	font-size: 16px;
 	width: 100%;
 	color: white;
 	margin: 0;
 	box-sizing: border-box;
-	box-shadow: none;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+	transition: all 0.2s ease;
 
 	&::placeholder {
 		color: rgba(255, 255, 255, 0.6);
 	}
 
+	&:hover {
+		border-color: var(--background-secondary-highlight);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	}
+
 	&:focus {
 		outline: none;
-		border: none;
-		box-shadow: none;
+		border-color: var(--primary);
+		box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+		background: var(--background-secondary-highlight);
 	}
 
 	/* Override browser autocomplete styling */
@@ -137,29 +144,40 @@ export const Input = styled.input<{ error?: boolean; disableFocusRing?: boolean 
 	&:-webkit-autofill:hover,
 	&:-webkit-autofill:focus,
 	&:-webkit-autofill:active {
-		-webkit-box-shadow: 0 0 0 30px #2C2C2C inset !important;
+		-webkit-box-shadow: 0 0 0 30px var(--background-secondary) inset !important;
 		-webkit-text-fill-color: white !important;
-		background-color: #2C2C2C !important;
+		background-color: var(--background-secondary) !important;
+		background-image: none !important;
+		-webkit-background-clip: content-box !important;
 	}
 
 	/* Firefox autocomplete override */
 	&:-moz-autofill {
-		background-color: #2C2C2C !important;
+		background-color: var(--background-secondary) !important;
 		color: white !important;
+		background-image: none !important;
+	}
+
+	/* Additional autocomplete prevention */
+	&[autocomplete="off"] {
+		background-color: var(--background-secondary) !important;
+		background-image: none !important;
 	}
 
 	${(props) =>
 		props.error &&
 		`
-		background: #2C2C2C;
-		border: none;
-		box-shadow: none;
+		background: var(--background-secondary);
+		border-color: var(--error);
+		box-shadow: 0 0 0 2px rgba(232, 63, 54, 0.2);
 	`}
 
 	&:disabled {
-		background: #2C2C2C;
+		background: var(--background-tertiary);
 		color: rgba(255, 255, 255, 0.4);
 		cursor: not-allowed;
+		border-color: var(--background-secondary-alt);
+		box-shadow: none;
 	}
 
 	-moz-appearance: textfield;
@@ -194,27 +212,27 @@ export const SubmitButton = styled(Button)`
 	min-height: 44px;
 	font-size: 16px;
 	font-weight: 600;
-	background: #2C2C2C;
+	background: var(--primary);
 	border: none;
-	border-radius: 6px;
-	color: white;
-	box-shadow: none;
-	transition: none;
+	border-radius: 8px;
+	color: var(--primary-contrast-text);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	transition: all 0.2s ease;
 
 	&:hover:not(:disabled) {
-		background: #2C2C2C;
-		box-shadow: none;
-		transform: none;
+		background: var(--primary-light);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+		transform: translateY(-1px);
 	}
 
 	&:active:not(:disabled) {
-		background: #2C2C2C;
-		transform: none;
-		box-shadow: none;
+		background: var(--primary-dark);
+		transform: translateY(0);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 	}
 
 	&:disabled {
-		background: #2C2C2C;
+		background: var(--background-tertiary);
 		color: rgba(255, 255, 255, 0.4);
 		cursor: not-allowed;
 		transform: none;
