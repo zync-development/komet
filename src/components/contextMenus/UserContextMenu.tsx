@@ -23,6 +23,17 @@ function UserContextMenu({ user, member }: MenuProps) {
 	}
 
 	/**
+	 * Start a DM with the user
+	 */
+	function startDM() {
+		// TODO: Implement actual DM creation
+		console.log("Starting DM with user:", user.id);
+		
+		// In a real implementation, this would create a DM channel
+		// and navigate to it
+	}
+
+	/**
 	 * Open kick modal
 	 */
 	function kick() {
@@ -46,9 +57,9 @@ function UserContextMenu({ user, member }: MenuProps) {
 
 	return (
 		<ContextMenu>
-			<ContextMenuButton disabled>Profile</ContextMenuButton>
-			<ContextMenuButton disabled>Mention</ContextMenuButton>
-			<ContextMenuButton disabled>Message</ContextMenuButton>
+					<ContextMenuButton disabled>Profile</ContextMenuButton>
+		<ContextMenuButton disabled>Mention</ContextMenuButton>
+		<ContextMenuButton onClick={startDM}>Message</ContextMenuButton>
 			<ContextMenuDivider />
 			{member && <ContextMenuButton disabled>Change Nickname</ContextMenuButton>}
 			<ContextMenuButton 
@@ -64,12 +75,12 @@ function UserContextMenu({ user, member }: MenuProps) {
 			<ContextMenuDivider />
 			{member && guildMe && (
 				<>
-					{guildMe.hasPermission("KICK_MEMBERS") && (
+					{guildMe.hasPermission("KickMembers") && (
 						<ContextMenuButton destructive onClick={kick}>
 							Kick {member?.nick ?? user.username}
 						</ContextMenuButton>
 					)}
-					{guildMe.hasPermission("BAN_MEMBERS") && (
+					{guildMe.hasPermission("BanMembers") && (
 						<>
 							<ContextMenuButton destructive onClick={ban}>
 								Ban {member?.nick ?? user.username}
@@ -77,7 +88,7 @@ function UserContextMenu({ user, member }: MenuProps) {
 							<ContextMenuDivider />
 						</>
 					)}
-					{guildMe.hasPermission("MANAGE_ROLES") && (
+					{guildMe.hasPermission("ManageRole") && (
 						<>
 							<ContextMenuButton disabled icon="mdiChevronRight">
 								Roles

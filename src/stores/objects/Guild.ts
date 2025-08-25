@@ -58,6 +58,10 @@ export default class Guild {
 	@observable members: GuildMemberStore;
 	@observable memberLists: ObservableMap<string, GuildMemberListStore> = new ObservableMap();
 
+	get appStore(): AppStore {
+		return this.app;
+	}
+
 	constructor(app: AppStore, data: GatewayGuild) {
 		this.app = app;
 		this.roles_ = new ObservableSet();
@@ -155,7 +159,8 @@ export default class Guild {
 				return true;
 			}
 
-			return channel.hasPermission("VIEW_CHANNEL");
+			// Check if user has permission to view this channel
+			return channel.hasPermission("ViewChannel");
 		});
 		const topLevelChannels = guildChannels.filter((channel) => !channel.parentId);
 		const sortedChannels = topLevelChannels
@@ -169,7 +174,7 @@ export default class Guild {
 
 	@computed
 	get roles() {
-		return this.app.roles.all.filter((role) => this.roles_.has(role.id));
+		  return this.app.roles.all.filter((role: any) => this.roles_.has(role.id));
 	}
 
 	@computed

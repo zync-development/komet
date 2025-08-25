@@ -15,8 +15,8 @@ const font: ThemeFont["font"] = {
 		// extraBold: 800,
 		black: 900,
 	},
-	family: "Roboto, Arial, Helvetica, sans-serif",
-	familyCode: '"Roboto Mono", monospace',
+	family: "JetBrains Mono, monospace",
+	familyCode: "JetBrains Mono, monospace",
 };
 
 export type ThemeVariables =
@@ -94,7 +94,8 @@ export type Theme = OverridesWithFont & {
 	light?: boolean;
 };
 
-export const ThemePresets: Record<string, Theme> = {
+// Create theme presets function to avoid Fast Refresh issues
+const createThemePresets = (): Record<string, Theme> => ({
 	light: {
 		backgroundPrimary: "#ffffff",
 		backgroundPrimaryAlt: "",
@@ -189,7 +190,10 @@ export const ThemePresets: Record<string, Theme> = {
 		statusOffline: "#2a2a2a",
 		font: font,
 	},
-};
+});
+
+// Export the theme presets
+export const ThemePresets = createThemePresets();
 
 const GlobalTheme = createGlobalStyle<{ theme: Theme }> `
 :root {

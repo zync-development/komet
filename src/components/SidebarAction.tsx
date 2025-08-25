@@ -11,21 +11,23 @@ const Wrapper = styled(Container)<{
 	active?: boolean;
 	useGreenColorScheme?: boolean;
 }>`
-	${(props) => (props.margin !== false ? "margin-top: 9px;" : "")}};
+	${(props) => (props.margin !== false ? "margin-top: 8px;" : "")}};
 	padding: 0;
-	width: 48px;
-	height: 48px;
-	border-radius: ${(props) => (props.active ? "30%" : "50%")};
-	background-color: ${(props) => (props.active ? "var(--primary)" : "var(--background-secondary)")};
+	width: 52px;
+	height: 52px;
+	border-radius: ${(props) => (props.active ? "16px" : "14px")};
+	background-color: ${(props) => (props.active ? "var(--primary)" : "var(--background-tertiary)")};
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: border-radius 0.2s ease, background-color 0.2s ease;
+	transition: all 0.15s ease;
+	border: 1px solid ${(props) => (props.active ? "rgba(88, 101, 242, 0.3)" : "rgba(255, 255, 255, 0.06)")};
 
 	&:hover {
-		border-radius: 30%;
+		border-radius: 16px;
 		background-color: ${(props) => (props.useGreenColorScheme ? "var(--success)" : "var(--primary)")};
-
+		transform: translateY(-1px);
+		border-color: ${(props) => (props.useGreenColorScheme ? "rgba(34, 197, 94, 0.4)" : "rgba(88, 101, 242, 0.4)")};
 	}
 `;
 

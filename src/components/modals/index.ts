@@ -1,6 +1,10 @@
 export * from "./AddFriendModal";
 export * from "./AddServerModal";
+export * from "./PendingFriendRequestsModal";
+export * from "../FriendsList";
 export * from "./BanMemberModal";
+export { default as ChannelSettingsModal } from "./ChannelSettingsModal";
+export { default as NewMessageModal } from "./NewMessageModal";
 
 export * from "./CreateChannelModel";
 export { default as CreateInviteModal } from "./CreateInviteModal";
@@ -22,4 +26,5 @@ export * from "./KickMemberModal";
 export * from "./LeaveServerModal";
 export { default as ServerSettingsModal } from "./ServerSettingsModal";
 export * from "./SettingsModal";
+export { default as UserProfileModal } from "./UserProfileModal";
 

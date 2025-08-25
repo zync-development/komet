@@ -1,16 +1,4 @@
-import "@fontsource/roboto-mono/100.css";
-import "@fontsource/roboto-mono/200.css";
-import "@fontsource/roboto-mono/300.css";
-import "@fontsource/roboto-mono/400.css";
-import "@fontsource/roboto-mono/500.css";
-import "@fontsource/roboto-mono/600.css";
-import "@fontsource/roboto-mono/700.css";
-import "@fontsource/roboto/100.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import "@fontsource/roboto/900.css";
+
 
 import { ModalRenderer } from "@/controllers/modals";
 import dayjs from "dayjs";

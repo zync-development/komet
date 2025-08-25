@@ -25,7 +25,7 @@ html *:not(code) {
 }
 
 code {
-	font-family: "Source Code Pro", monospace;
+	font-family: "JetBrains Mono", monospace;
 }
 
 /* Scroll bar stylings */

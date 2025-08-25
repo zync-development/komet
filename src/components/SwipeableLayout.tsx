@@ -18,9 +18,10 @@ const Sidebar = styled(animated.div)`
 	width: 80%;
 	height: 100%;
 	z-index: 10;
-	background: var(--background-primary);
+	background: var(--background-secondary);
 	border-right: 1px solid var(--background-tertiary);
 	box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+	transform: translateX(-100%);
 `;
 
 const MainContent = styled(animated.div)`
@@ -28,6 +29,7 @@ const MainContent = styled(animated.div)`
 	width: 100%;
 	height: 100%;
 	background: var(--background-primary);
+	z-index: 1;
 `;
 
 const Overlay = styled(animated.div)`
@@ -39,6 +41,7 @@ const Overlay = styled(animated.div)`
 	background: rgba(0, 0, 0, 0.3);
 	z-index: 5;
 	pointer-events: none;
+	opacity: 0;
 `;
 
 const SwipeIndicator = styled.div<{ $visible: boolean }>`

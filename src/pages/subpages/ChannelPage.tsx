@@ -38,14 +38,9 @@ function LeftPanel() {
 				flex: 1,
 			}}
 		>
-			<GuildSidebar />
 			<ChannelSidebar />
 		</div>
 	);
-}
-
-function RightPanel() {
-	return <div style={{ height: "100%", backgroundColor: "green", color: "white" }}>Right Panel</div>;
 }
 
 function ChannelPage() {
@@ -63,7 +58,7 @@ function ChannelPage() {
 		return (
 			<Container>
 				<BannerRenderer />
-				<SwipeableLayout leftChildren={<LeftPanel />} rightChildren={<RightPanel />}>
+				<SwipeableLayout leftChildren={<LeftPanel />}>
 					<ErrorBoundary section="component">
 						<Chat />
 					</ErrorBoundary>

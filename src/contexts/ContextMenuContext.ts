@@ -23,6 +23,10 @@ export type ContextMenuProps =
 	| {
 			type: "guild";
 			guild: Guild;
+	  }
+	| {
+			type: "channel_list";
+			guildId: string;
 	  };
 
 export type ContextMenuContextType = {

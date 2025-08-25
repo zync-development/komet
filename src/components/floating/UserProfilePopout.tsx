@@ -167,11 +167,17 @@ const ActionSection = styled.div`
 	padding: 12px;
 `;
 
-const AddFriendButton = styled(Button)`
+const ActionButton = styled(Button)`
 	width: 100%;
 	justify-content: center;
 	font-size: 14px;
 	font-weight: 500;
+`;
+
+const ActionButtonContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 `;
 
 interface Props {
@@ -196,6 +202,15 @@ function UserProfilePopout({ user, member }: Props) {
 		modalController.push({
 			type: "add_friend",
 		});
+	};
+
+	const handleMessage = () => {
+		// TODO: Implement actual DM creation
+		// For now, we'll just log it
+		console.log("Starting DM with user:", user.id);
+		
+		// In a real implementation, this would create a DM channel
+		// and navigate to it
 	};
 
 	return (
@@ -325,13 +340,22 @@ function UserProfilePopout({ user, member }: Props) {
 				
 				{!isOwnProfile && (
 					<ActionSection>
-						<AddFriendButton
-							palette="primary"
-							size="medium"
-							onClick={handleAddFriend}
-						>
-							Add Friend
-						</AddFriendButton>
+						<ActionButtonContainer>
+							<ActionButton
+								palette="primary"
+								size="medium"
+								onClick={handleMessage}
+							>
+								Message
+							</ActionButton>
+							<ActionButton
+								palette="secondary"
+								size="medium"
+								onClick={handleAddFriend}
+							>
+								Add Friend
+							</ActionButton>
+						</ActionButtonContainer>
 					</ActionSection>
 				)}
 			</Bottom>

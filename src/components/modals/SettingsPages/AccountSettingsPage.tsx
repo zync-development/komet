@@ -6,137 +6,362 @@ import { RESTPatchAPICurrentUserJSONBody, Routes } from "@spacebarchat/spacebar-
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import { modalController } from "@/controllers/modals";
+import Icon from "@components/Icon";
 
 const Content = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	min-width: 30vw;
+	gap: 24px;
+	min-height: 0;
+	overflow: visible;
 `;
 
-const UserInfoContainer = styled.div`
-	border-radius: 8px;
-	background-color: var(--background-secondary);
-	padding: 16px;
-`;
-
-const Field = styled.div<{ spacerTop?: boolean; spacerBottom?: boolean }>`
+const Section = styled.div`
 	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-
-	${(props) =>
-		props.spacerTop &&
-		css`
-			margin-top: 24px;
-		`}
-
-	${(props) =>
-		props.spacerBottom &&
-		css`
-			margin-bottom: 24px;
-		`}
-`;
-
-const Row = styled.div`
-	display: flex;
-	flex: 1;
 	flex-direction: column;
-	overflow: hidden;
-	margin-right: 16px;
+	gap: 16px;
 `;
 
-const FieldTitle = styled.span`
-	margin-bottom: 4px;
-	color: var(--text-secondary);
-	font-size: 12px;
-	font-weight: var(--font-weight-medium);
-	letter-spacing: 0.5px;
+const SectionHeader = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 `;
 
-const FieldValue = styled.div`
-	overflow: hidden;
-	text-overflow: ellipsis;
-`;
-
-const FieldValueText = styled.span`
+const SectionTitle = styled.h3`
 	color: var(--text);
-	font-size: 16px;
-	font-weight: var(--font-weight-regular);
+	font-size: 20px;
+	font-weight: 600;
+	margin: 0;
 `;
 
-const FieldValueToggle = styled.button`
-	color: var(--text-link);
-	cursor: pointer;
-	width: auto;
-	display: inline;
-	height: auto;
-	padding: 2px 4px;
-	position: relative;
-	background: none;
-	border: none;
-	border-radius: 4px;
+const SectionSubtitle = styled.p`
+	color: var(--text-secondary);
 	font-size: 14px;
-	font-weight: var(--font-weight-medium);
-	user-select: none;
-	text-rendering: optimizeLegibility;
+	margin: 0;
+	line-height: 1.4;
 `;
 
-const IconContainer = styled.div`
+const UserInfoSection = styled.div`
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	padding: 20px;
+	background: var(--background-secondary);
+	border-radius: 8px;
+	border: 1px solid var(--background-tertiary);
+`;
+
+const AvatarSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+`;
+
+const AvatarContainer = styled.div`
 	position: relative;
-	display: inline-block;
+	cursor: pointer;
 `;
 
-const IconInput = styled.input`
-	display: none;
-`;
-
-const FileInput = styled.div`
+const AvatarOverlay = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	cursor: pointer;
-	font-size: 0px;
-`;
-
-const UnsavedChangesBar = styled.div`
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 50%;
 	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	background-color: var(--background-tertiary);
-	padding: 10px 16px;
-	border-radius: 8px;
-	margin-top: 24px;
 	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	
+	${AvatarContainer}:hover & {
+		opacity: 1;
+	}
 `;
 
-const UnsavedChangedActions = styled.div`
+const UserDetails = styled.div`
+	flex: 1;
 	display: flex;
-	gap: 10px;
+	flex-direction: column;
+	gap: 8px;
 `;
 
-const Text = styled.p`
-	color: var(--text-secondary);
-	font-size: 16px;
-	font-weight: var(--font-weight-medium);
+const Username = styled.h2`
+	color: var(--text);
+	font-size: 24px;
+	font-weight: 600;
 	margin: 0;
-	padding: 0;
+`;
+
+const UserId = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--text-secondary);
+	font-size: 14px;
 `;
 
 
 
+const AccountDetailsSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+`;
 
+const DetailItem = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	background: var(--background-secondary);
+	border-radius: 8px;
+	border: 1px solid var(--background-tertiary);
+`;
+
+const DetailLeft = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+`;
+
+const DetailIcon = styled.div`
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+`;
+
+const DetailInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+`;
+
+const DetailLabel = styled.span`
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+`;
+
+const DetailValue = styled.span`
+	color: var(--text);
+	font-size: 16px;
+	font-weight: 500;
+`;
+
+const DetailActions = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+`;
+
+const RevealButton = styled.button`
+	color: var(--error);
+	background: none;
+	border: none;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	text-decoration: underline;
+	
+	&:hover {
+		color: var(--error-light);
+	}
+`;
+
+const EditButton = styled.button`
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: none;
+	border: none;
+	color: var(--text-secondary);
+	cursor: pointer;
+	border-radius: 4px;
+	transition: all 0.2s ease;
+	
+	&:hover {
+		background: var(--background-tertiary);
+		color: var(--text);
+	}
+`;
+
+const TwoFactorSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+`;
+
+const TwoFactorOptions = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+`;
+
+const TwoFactorOption = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 16px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-tertiary);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-align: left;
+	
+	&:hover {
+		background: var(--background-secondary-highlight);
+		border-color: var(--background-secondary-highlight);
+	}
+`;
+
+const TwoFactorIcon = styled.div`
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+`;
+
+const TwoFactorContent = styled.div`
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+`;
+
+const TwoFactorTitle = styled.span`
+	color: var(--text);
+	font-size: 16px;
+	font-weight: 600;
+`;
+
+const TwoFactorDescription = styled.span`
+	color: var(--text-secondary);
+	font-size: 14px;
+	line-height: 1.4;
+`;
+
+const WarningBanner = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 16px;
+	background: var(--error);
+	color: white;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 500;
+`;
+
+const WarningIcon = styled.div`
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: white;
+	border-radius: 50%;
+	color: var(--error);
+	font-size: 12px;
+	font-weight: bold;
+`;
+
+const AccountManagementSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+`;
+
+const ManagementOptions = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+`;
+
+const ManagementOption = styled.button`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-tertiary);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-align: left;
+	
+	&:hover {
+		background: var(--background-secondary-highlight);
+		border-color: var(--background-secondary-highlight);
+	}
+`;
+
+const ManagementLeft = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 16px;
+`;
+
+const ManagementIcon = styled.div`
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+`;
+
+const ManagementContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+`;
+
+const ManagementTitle = styled.span`
+	color: var(--text);
+	font-size: 16px;
+	font-weight: 600;
+`;
+
+const ManagementDescription = styled.span`
+	color: var(--text-secondary);
+	font-size: 14px;
+	line-height: 1.4;
+`;
+
+const ArrowIcon = styled.div`
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+`;
+
+const HiddenInput = styled.input`
+	display: none;
+`;
 
 function AccountSettingsPage() {
 	const app = useAppStore();
 	const [shouldRedactEmail, setShouldRedactEmail] = useState(true);
 	const [selectedFile, setSelectedFile] = useState<File>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [hasUnsavedChangd, setHasUnsavedChanged] = useState(false);
+	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	const redactEmail = (email: string) => {
@@ -144,17 +369,10 @@ function AccountSettingsPage() {
 		return `${"*".repeat(username.length)}@${domain}`;
 	};
 
-	const redactPhoneNumber = (phoneNumber: string) => {
-		const lastFour = phoneNumber.slice(-4);
-		return "*".repeat(phoneNumber.length - 4) + lastFour;
-	};
-
 	const onAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.target.files) return;
 		setSelectedFile(event.target.files[0]);
 	};
-	
-
 
 	const discardChanges = () => {
 		setSelectedFile(undefined);
@@ -172,10 +390,6 @@ function AccountSettingsPage() {
 			app.rest
 				.patch<RESTPatchAPICurrentUserJSONBody, RESTPatchAPICurrentUserJSONBody>(Routes.user(), payload)
 				.then((r) => {
-					// runInAction(() => {
-					// 	if (r.username) app.account!.username = r.username;
-					// 	if (r.avatar) app.account!.avatar = r.avatar;
-					// });
 					setSelectedFile(undefined);
 					setLoading(false);
 				})
@@ -187,110 +401,254 @@ function AccountSettingsPage() {
 		reader.readAsDataURL(selectedFile);
 	};
 
+	const handleGenerateBackupCodes = () => {
+		// TODO: Implement backup codes generation
+		console.log("Generate backup codes clicked");
+	};
+
+	const handleAddAuthenticator = () => {
+		// TODO: Implement authenticator setup
+		console.log("Add authenticator clicked");
+	};
+
+	const handleDisableAccount = () => {
+		// TODO: Implement account disable
+		console.log("Disable account clicked");
+	};
+
+	const handleDeleteAccount = () => {
+		// TODO: Implement account deletion
+		console.log("Delete account clicked");
+	};
+
 	useEffect(() => {
-		// handle unsaved changes state
 		if (selectedFile) {
-			setHasUnsavedChanged(true);
+			setHasUnsavedChanges(true);
 		} else {
-			// Reset state if there is nothing changed
-			setHasUnsavedChanged(false);
+			setHasUnsavedChanges(false);
 		}
 	}, [selectedFile]);
 
 	return (
 		<div>
-			<SectionTitle>Account</SectionTitle>
+			<SectionTitle>My Account</SectionTitle>
 			<Content>
-
-				<UserInfoContainer>
-					<Field spacerBottom>
-						<IconContainer>
-							{selectedFile ? (
-								<img
-									src={URL.createObjectURL(selectedFile)}
-									alt="Avatar"
-									width="80px"
-									height="80px"
-									style={{
-										borderRadius: "50%",
-										pointerEvents: "none",
-										objectFit: "cover",
-									}}
-								/>
-							) : (
-								<Avatar user={app.account!} size={80} />
-							)}
-							<IconInput
+				{/* User Information Section */}
+				<Section>
+					<UserInfoSection>
+						<AvatarSection>
+							<AvatarContainer onClick={() => fileInputRef.current?.click()}>
+								{selectedFile ? (
+									<img
+										src={URL.createObjectURL(selectedFile)}
+										alt="Avatar"
+										width="80"
+										height="80"
+										style={{
+											borderRadius: "50%",
+											objectFit: "cover",
+										}}
+									/>
+								) : (
+									<Avatar user={app.account!} size={80} />
+								)}
+								<AvatarOverlay>
+									<Icon icon="mdiCamera" size="24px" color="white" />
+								</AvatarOverlay>
+							</AvatarContainer>
+							<HiddenInput
 								ref={fileInputRef}
 								type="file"
-								name="avatar"
 								accept="image/*"
 								onChange={onAvatarChange}
-								disabled={loading}
 							/>
-							<FileInput
-								role="button"
-								onClick={() => fileInputRef.current?.click()}
-								aria-disabled={loading}
-							/>
-						</IconContainer>
-					</Field>
+						</AvatarSection>
+						
+						<UserDetails>
+							<Username>{app.account?.username}#{app.account?.discriminator}</Username>
+							<UserId>
+								<Icon icon="mdiHelpCircle" size="16px" />
+								{app.account?.id || "Unknown ID"}
+							</UserId>
+						</UserDetails>
+					</UserInfoSection>
+				</Section>
 
-					<Field spacerBottom>
-						<Row>
-							<FieldTitle>Username</FieldTitle>
+				{/* Account Details Section */}
+				<Section>
+					<SectionHeader>
+						<SectionTitle>Account Details</SectionTitle>
+					</SectionHeader>
+					
+					<AccountDetailsSection>
+						<DetailItem>
+							<DetailLeft>
+								<DetailIcon>
+									<Icon icon="mdiAt" size="20px" />
+								</DetailIcon>
+								<DetailInfo>
+									<DetailLabel>Username</DetailLabel>
+									<DetailValue>{app.account?.username}#{app.account?.discriminator}</DetailValue>
+								</DetailInfo>
+							</DetailLeft>
+							<DetailActions>
+								<EditButton>
+									<Icon icon="mdiPencil" size="16px" />
+								</EditButton>
+							</DetailActions>
+						</DetailItem>
 
-							<FieldValue>
-								<FieldValueText>
-									{app.account?.username}#{app.account?.discriminator}
-								</FieldValueText>
-							</FieldValue>
-						</Row>
-					</Field>
+						<DetailItem>
+							<DetailLeft>
+								<DetailIcon>
+									<Icon icon="mdiEmail" size="20px" />
+								</DetailIcon>
+								<DetailInfo>
+									<DetailLabel>Email</DetailLabel>
+									<DetailValue>
+										{app.account?.email
+											? shouldRedactEmail
+												? redactEmail(app.account.email)
+												: app.account.email
+											: "No email added."}
+									</DetailValue>
+								</DetailInfo>
+							</DetailLeft>
+							<DetailActions>
+								<RevealButton onClick={() => setShouldRedactEmail(!shouldRedactEmail)}>
+									{shouldRedactEmail ? "Reveal" : "Hide"}
+								</RevealButton>
+								<EditButton>
+									<Icon icon="mdiPencil" size="16px" />
+								</EditButton>
+							</DetailActions>
+						</DetailItem>
 
-					<Field>
-						<Row>
-							<FieldTitle>Email</FieldTitle>
+						<DetailItem>
+							<DetailLeft>
+								<DetailIcon>
+									<Icon icon="mdiKey" size="20px" />
+								</DetailIcon>
+								<DetailInfo>
+									<DetailLabel>Password</DetailLabel>
+									<DetailValue>•••••••••</DetailValue>
+								</DetailInfo>
+							</DetailLeft>
+							<DetailActions>
+								<EditButton>
+									<Icon icon="mdiPencil" size="16px" />
+								</EditButton>
+							</DetailActions>
+						</DetailItem>
+					</AccountDetailsSection>
+				</Section>
 
-							<FieldValue>
-								<FieldValueText>
-									{app.account?.email
-										? shouldRedactEmail
-											? redactEmail(app.account.email)
-											: app.account.email
-										: "No email added."}
+				{/* Two-Factor Authentication Section */}
+				<Section>
+					<SectionHeader>
+						<SectionTitle>Two-Factor Authentication</SectionTitle>
+						<SectionSubtitle>Add an extra layer of security by enabling 2FA on your account.</SectionSubtitle>
+					</SectionHeader>
+					
+					<TwoFactorSection>
+						<TwoFactorOptions>
+							<TwoFactorOption onClick={handleGenerateBackupCodes}>
+								<TwoFactorIcon>
+									<Icon icon="mdiFormatListBulleted" size="24px" />
+								</TwoFactorIcon>
+								<TwoFactorContent>
+									<TwoFactorTitle>Generate Backup Codes</TwoFactorTitle>
+									<TwoFactorDescription>Get ready to use 2FA by setting up a backup method.</TwoFactorDescription>
+								</TwoFactorContent>
+							</TwoFactorOption>
 
-									<FieldValueToggle onClick={() => setShouldRedactEmail(!shouldRedactEmail)}>
-										{shouldRedactEmail ? "Reveal" : "Hide"}
-									</FieldValueToggle>
-								</FieldValueText>
-							</FieldValue>
-						</Row>
-					</Field>
+							<TwoFactorOption onClick={handleAddAuthenticator}>
+								<TwoFactorIcon>
+									<Icon icon="mdiLock" size="24px" />
+								</TwoFactorIcon>
+								<TwoFactorContent>
+									<TwoFactorTitle>Add Authenticator</TwoFactorTitle>
+									<TwoFactorDescription>Set up time-based one-time password.</TwoFactorDescription>
+								</TwoFactorContent>
+							</TwoFactorOption>
+						</TwoFactorOptions>
 
-					<Field spacerTop>
-						<Row>
-							<FieldTitle>Phone Number</FieldTitle>
+						<WarningBanner>
+							<WarningIcon>i</WarningIcon>
+							You haven't enabled two-factor authentication!
+						</WarningBanner>
+					</TwoFactorSection>
+				</Section>
 
-							<FieldValue>
-								<FieldValueText>No phone number added.</FieldValueText>
-							</FieldValue>
-						</Row>
-					</Field>
-				</UserInfoContainer>
+				{/* Account Management Section */}
+				<Section>
+					<SectionHeader>
+						<SectionTitle>Account Management</SectionTitle>
+						<SectionSubtitle>Disable or delete your account at any time. This will log you out and fully delete your account, including your chat history and friends.</SectionSubtitle>
+					</SectionHeader>
+					
+					<AccountManagementSection>
+						<ManagementOptions>
+							<ManagementOption onClick={handleDisableAccount}>
+								<ManagementLeft>
+									<ManagementIcon>
+										<Icon icon="mdiCancel" size="24px" color="var(--error)" />
+									</ManagementIcon>
+									<ManagementContent>
+										<ManagementTitle>Disable Account</ManagementTitle>
+										<ManagementDescription>You won't be able to access your account unless you contact support - however, your data will not be deleted.</ManagementDescription>
+									</ManagementContent>
+								</ManagementLeft>
+								<ArrowIcon>
+									<Icon icon="mdiChevronRight" size="20px" />
+								</ArrowIcon>
+							</ManagementOption>
 
-				{hasUnsavedChangd && (
-					<UnsavedChangesBar>
-						<Text>You have unsaved changes.</Text>
-						<UnsavedChangedActions>
+							<ManagementOption onClick={handleDeleteAccount}>
+								<ManagementLeft>
+									<ManagementIcon>
+										<Icon icon="mdiDelete" size="24px" color="var(--error)" />
+									</ManagementIcon>
+									<ManagementContent>
+										<ManagementTitle>Delete Account</ManagementTitle>
+										<ManagementDescription>Your account and all of your data (including your messages and friends list) will be queued for deletion. A confirmation email will be sent - you can cancel this within 7 days by contacting support.</ManagementDescription>
+									</ManagementContent>
+								</ManagementLeft>
+								<ArrowIcon>
+									<Icon icon="mdiChevronRight" size="20px" />
+								</ArrowIcon>
+							</ManagementOption>
+						</ManagementOptions>
+					</AccountManagementSection>
+				</Section>
+
+				{/* Unsaved Changes Bar */}
+				{hasUnsavedChanges && (
+					<div style={{
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-between",
+						backgroundColor: "var(--background-tertiary)",
+						padding: "10px 16px",
+						borderRadius: "8px",
+						alignItems: "center"
+					}}>
+						<span style={{
+							color: "var(--text-secondary)",
+							fontSize: "16px",
+							fontWeight: "500"
+						}}>
+							You have unsaved changes.
+						</span>
+						<div style={{ display: "flex", gap: "10px" }}>
 							<Button palette="link" onClick={discardChanges} disabled={loading}>
 								Discard
 							</Button>
 							<Button palette="primary" disabled={loading} onClick={save}>
 								{loading ? "Saving..." : "Save"}
 							</Button>
-						</UnsavedChangedActions>
-					</UnsavedChangesBar>
+						</div>
+					</div>
 				)}
 			</Content>
 		</div>

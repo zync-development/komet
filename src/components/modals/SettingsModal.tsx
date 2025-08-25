@@ -11,6 +11,7 @@ import { Modal } from "./ModalComponents";
 import AccountSettingsPage from "./SettingsPages/AccountSettingsPage";
 import DeveloperSettingsPage from "./SettingsPages/DeveloperSettingsPage";
 import ExperimentsPage from "./SettingsPages/ExperimentsPage";
+import ProfileSettingsPage from "./SettingsPages/ProfileSettingsPage";
 import ThemeSettingsPage from "./SettingsPages/ThemeSettingsPage";
 
 const SidebarView = styled.div`
@@ -183,11 +184,14 @@ export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => 
 								<Item data-value="0" onClick={onClick}>
 									Account
 								</Item>
-								<Divider />
 								<Item data-value="1" onClick={onClick}>
+									Profile
+								</Item>
+								<Divider />
+								<Item data-value="2" onClick={onClick}>
 									Developer Options
 								</Item>
-								<Item data-value="2" onClick={onClick}>
+								<Item data-value="3" onClick={onClick}>
 									Experiments
 								</Item>
 								<Divider />
@@ -248,9 +252,10 @@ export const SettingsModal = observer(({ ...props }: ModalProps<"settings">) => 
 					<ContentInner>
 						<ContentColumn>
 							{index === 0 && <AccountSettingsPage />}
-							{index === 1 && <DeveloperSettingsPage />}
-							{index === 2 && <ExperimentsPage />}
-							{index === 3 && <ThemeSettingsPage />}
+							{index === 1 && <ProfileSettingsPage />}
+							{index === 2 && <DeveloperSettingsPage />}
+							{index === 3 && <ExperimentsPage />}
+							{index === 4 && <ThemeSettingsPage />}
 						</ContentColumn>
 						<CloseContainer>
 							<CloseContainerInner></CloseContainerInner>

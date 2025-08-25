@@ -5,10 +5,9 @@ export type PillType = "none" | "unread" | "hover" | "active";
 
 const Wrapper = styled(Container)`
 	position: absolute;
-	// top: 0;
 	left: 0;
-	width: 8px;
-	height: 48px;
+	width: 4px;
+	height: 100%;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
@@ -16,30 +15,46 @@ const Wrapper = styled(Container)`
 `;
 
 const Pill = styled.span<{ type: PillType }>`
-	width: 8px;
-	border-radius: 0 4px 4px 0;
-	background-color: white;
-	margin-left: -4px;
-	transition: height 0.3s ease;
+	width: 4px;
+	border-radius: 0 2px 2px 0;
+	background-color: ${(props) => {
+		switch (props.type) {
+			case "unread":
+				return "var(--primary)";
+			case "hover":
+				return "var(--text-secondary)";
+			case "active":
+				return "var(--primary)";
+			default:
+				return "transparent";
+		}
+	}};
+	margin-left: -2px;
+	transition: all 0.15s ease;
+	box-shadow: ${(props) => props.type !== "none" ? "0 0 4px rgba(88, 101, 242, 0.4)" : "none"};
 
 	${(props) => {
 		switch (props.type) {
 			case "unread":
 				return `
-					height: 8px;
+					height: 16px;
+					opacity: 1;
 				`;
 			case "hover":
 				return `
-				height: 20px;
+					height: 24px;
+					opacity: 0.9;
 				`;
 			case "active":
 				return `
-				height: 40px;
+					height: 32px;
+					opacity: 1;
 				`;
 			default:
 				return `
 					height: 0;
-					`;
+					opacity: 0;
+				`;
 		}
 	}}
 `;

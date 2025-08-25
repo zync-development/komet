@@ -376,7 +376,7 @@ function MessageInput({ channel }: Props) {
 
 				<InnerInnerWrapper>
 					<UploadWrapper>
-						{channel.hasPermission("ATTACH_FILES") && channel.hasPermission("SEND_MESSAGES") && (
+						{channel.hasPermission("UploadFiles") && channel.hasPermission("SendMessage") && (
 							<AttachmentUpload append={appendAttachment} clearInput={clearInput}/>
 						)}
 					</UploadWrapper>
@@ -385,7 +385,7 @@ function MessageInput({ channel }: Props) {
 						// maxLength={4000} // TODO: this should come from the server
 						value={content}
 						placeholder={
-							channel.hasPermission("SEND_MESSAGES")
+							channel.hasPermission("SendMessage")
 								? `Message ${
 										channel.type === ChannelType.DM
 											? channel.recipients?.[0].username
@@ -393,12 +393,12 @@ function MessageInput({ channel }: Props) {
 									}`
 								: "You do not have permission to send messages in this channel."
 						}
-						disabled={!channel.hasPermission("SEND_MESSAGES")}
+						disabled={!channel.hasPermission("SendMessage")}
 						onChange={onChange}
 						onKeyDown={onKeyDown}
 					/>
 
-					{channel.hasPermission("SEND_MESSAGES") && (
+					{channel.hasPermission("SendMessage") && (
 						<>
 							<ButtonWrapper>
 								<IconButton ref={emoteButtonRef} onClick={onEmojiButtonClick}>

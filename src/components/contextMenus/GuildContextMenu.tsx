@@ -36,7 +36,7 @@ function GuildContextMenu({ guild }: MenuProps) {
 	 * Open invite creation modal
 	 */
 	function openInviteCreateModal() {
-		const channel = guild.channels.find((x) => x.type === ChannelType.GuildText && x.hasPermission("VIEW_CHANNEL"));
+		const channel = guild.channels.find((x) => x.type === ChannelType.GuildText && x.hasPermission("ViewChannel"));
 		if (!channel) {
 			logger.error("Failed to find suitable channel for invite creation");
 			return;

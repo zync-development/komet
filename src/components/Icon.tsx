@@ -5,15 +5,21 @@ import { IconProps as IconBaseProps } from "@mdi/react/dist/IconProps";
 export type IconType = keyof typeof Icons;
 
 export interface IconProps extends Omit<IconBaseProps, "path"> {
-	icon: IconType;
+	icon: IconType | string;
 }
 
 function Icon(props: IconProps) {
-	const path = Icons[props.icon];
-	if (!path) throw new Error(`Invalid icon name ${props.icon}`);
-
 	const { icon, ...propSpread } = props;
-	return <MdiIcon {...propSpread} path={path} />;
+	
+	// Check if it's a valid MDI icon
+	if (typeof icon === "string" && Icons[icon as IconType]) {
+		const path = Icons[icon as IconType];
+		return <MdiIcon {...propSpread} path={path} />;
+	}
+	
+	// Fallback for invalid icons
+	console.warn(`Invalid icon name: ${icon}`);
+	return <span>?</span>;
 }
 
 export default Icon;

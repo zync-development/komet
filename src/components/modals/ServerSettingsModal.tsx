@@ -11,7 +11,9 @@ import { ChannelType } from "@spacebarchat/spacebar-api-types/v9";
 import CreateRoleModal from "./CreateRoleModal";
 import EditRoleModal from "./EditRoleModal";
 import DeleteRoleModal from "./DeleteRoleModal";
+import RolesSettingsPage from "./SettingsPages/RolesSettingsPage";
 import CreateInviteModal from "./CreateInviteModal";
+import MembersSettingsPage from "./SettingsPages/MembersSettingsPage";
 
 // Main container
 const Container = styled.div`
@@ -23,73 +25,79 @@ const Container = styled.div`
 
 // Left sidebar
 const Sidebar = styled.div`
-	width: 240px;
+	width: 280px;
 	background: var(--background-secondary);
-	border-right: 1px solid var(--background-tertiary);
+	border-right: 1px solid rgba(255, 255, 255, 0.06);
 	display: flex;
 	flex-direction: column;
 `;
 
 const ServerName = styled.div`
-	padding: 20px 16px 16px 16px;
-	font-size: 16px;
-	font-weight: 600;
+	padding: 24px 20px 20px 20px;
+	font-size: 18px;
+	font-weight: 700;
 	color: var(--text);
-	border-bottom: 1px solid var(--background-tertiary);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+	background: rgba(255, 255, 255, 0.02);
 `;
 
 const NavSection = styled.div`
-	margin-top: 8px;
+	margin-top: 16px;
 `;
 
 const NavSectionHeader = styled.div`
-	padding: 8px 16px 4px 16px;
-	font-size: 12px;
-	font-weight: 600;
+	padding: 12px 20px 8px 20px;
+	font-size: 11px;
+	font-weight: 700;
 	color: var(--text-secondary);
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
+	letter-spacing: 1px;
 `;
 
 const NavItem = styled.div<{ active?: boolean }>`
 	display: flex;
 	align-items: center;
-	padding: 8px 16px;
-	margin: 2px 8px;
-	border-radius: 4px;
+	padding: 12px 20px;
+	margin: 4px 12px;
+	border-radius: 12px;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: all 0.15s ease;
 	color: var(--text);
-	background: ${props => props.active ? 'var(--background-primary)' : 'transparent'};
+	background: ${props => props.active ? 'rgba(255, 255, 255, 0.08)' : 'transparent'};
+	font-weight: ${props => props.active ? '600' : '500'};
 
 	&:hover {
-		background: var(--background-primary);
+		background: ${props => props.active ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.04)'};
+		transform: translateX(2px);
 	}
 `;
 
 const NavItemIcon = styled.div`
-	margin-right: 12px;
+	margin-right: 14px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 20px;
 	height: 20px;
+	opacity: 0.8;
 `;
 
 const DeleteServerButton = styled.div`
 	display: flex;
 	align-items: center;
-	padding: 8px 16px;
-	margin: 8px;
-	border-radius: 4px;
+	padding: 12px 20px;
+	margin: 12px;
+	border-radius: 12px;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: all 0.15s ease;
 	color: var(--error);
 	margin-top: auto;
-	margin-bottom: 16px;
+	margin-bottom: 20px;
+	font-weight: 600;
 
 	&:hover {
-		background: var(--background-primary);
+		background: rgba(239, 68, 68, 0.1);
+		transform: translateX(2px);
 	}
 `;
 
@@ -98,154 +106,180 @@ const Content = styled.div`
 	flex: 1;
 	background: var(--background-primary);
 	overflow-y: auto;
+	padding: 32px;
 `;
 
 const ContentHeader = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 20px 24px 16px 24px;
-	border-bottom: 1px solid var(--background-tertiary);
+	margin-bottom: 32px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 `;
 
 const ContentTitle = styled.h1`
-	font-size: 20px;
-	font-weight: 600;
-	color: var(--text);
 	margin: 0;
+	font-size: 28px;
+	font-weight: 700;
+	color: var(--text);
 `;
 
-const CloseButton = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	cursor: pointer;
+const ContentDescription = styled.p`
+	margin: 8px 0 0 0;
+	font-size: 16px;
 	color: var(--text-secondary);
-`;
-
-const CloseIcon = styled.div`
-	width: 32px;
-	height: 32px;
-	border: 1px solid var(--background-tertiary);
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-bottom: 4px;
-`;
-
-const CloseText = styled.span`
-	font-size: 12px;
-	color: var(--text-secondary);
+	line-height: 1.5;
 `;
 
 // Overview section styles
-const OverviewSection = styled.div`
-	padding: 24px;
+const OverviewContent = styled.div`
+	padding: 0;
 `;
 
-const Section = styled.div`
-	margin-bottom: 32px;
+// Form section styles
+const FormSection = styled.div`
+	background: var(--background-secondary);
+	border-radius: 16px;
+	padding: 32px;
+	margin-bottom: 24px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
 `;
 
 const SectionTitle = styled.h3`
-	font-size: 14px;
+	margin: 0 0 24px 0;
+	font-size: 20px;
 	font-weight: 600;
 	color: var(--text);
-	margin: 0 0 16px 0;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
 `;
 
-const AvatarSection = styled.div`
-	display: flex;
-	align-items: flex-start;
-	gap: 16px;
+const InputGroup = styled.div`
 	margin-bottom: 24px;
-`;
-
-const Avatar = styled.div`
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	background: var(--background-tertiary);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 32px;
-	font-weight: 600;
-	color: var(--text);
-	flex-shrink: 0;
-`;
-
-const AvatarContent = styled.div`
-	flex: 1;
 `;
 
 const InputLabel = styled.label`
 	display: block;
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--text-secondary);
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
 	margin-bottom: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text);
 `;
 
 const Input = styled.input`
 	width: 100%;
-	padding: 8px 12px;
-	background: var(--background-secondary);
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
+	padding: 14px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	background: var(--background-tertiary);
 	color: var(--text);
 	font-size: 14px;
-	margin-bottom: 8px;
-
+	transition: all 0.15s ease;
+	
 	&:focus {
 		outline: none;
 		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+		transform: translateY(-1px);
 	}
-`;
-
-const RemoveLink = styled.a`
-	color: var(--text-secondary);
-	font-size: 12px;
-	text-decoration: none;
-	cursor: pointer;
-
+	
 	&:hover {
-		text-decoration: underline;
+		border-color: rgba(255, 255, 255, 0.2);
 	}
 `;
 
 const TextArea = styled.textarea`
 	width: 100%;
-	padding: 8px 12px;
-	background: var(--background-secondary);
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
+	padding: 14px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	background: var(--background-tertiary);
 	color: var(--text);
 	font-size: 14px;
-	min-height: 80px;
+	min-height: 100px;
 	resize: vertical;
-	margin-bottom: 8px;
-
+	transition: all 0.15s ease;
+	
 	&:focus {
 		outline: none;
 		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+		transform: translateY(-1px);
+	}
+	
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.2);
 	}
 `;
 
-const MarkdownInfo = styled.div`
+const ButtonGroup = styled.div`
 	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 12px;
-	color: var(--text-secondary);
-	margin-bottom: 8px;
+	gap: 16px;
+	justify-content: flex-end;
+	margin-top: 32px;
 `;
 
+const SaveButton = styled.button`
+	padding: 12px 24px;
+	background: var(--primary);
+	color: white;
+	border: none;
+	border-radius: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	
+	&:hover {
+		background: var(--primary-hover);
+		transform: translateY(-1px);
+	}
+	
+	&:disabled {
+		background: var(--background-tertiary);
+		cursor: not-allowed;
+		opacity: 0.5;
+		transform: none;
+	}
+`;
+
+const CancelButton = styled.button`
+	padding: 12px 24px;
+	background: var(--background-tertiary);
+	color: var(--text);
+	border: none;
+	border-radius: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	
+	&:hover {
+	background: var(--background-primary);
+		transform: translateY(-2px);
+	}
+`;
+
+const ErrorMessage = styled.div`
+	background: rgba(239, 68, 68, 0.1);
+	color: var(--error);
+	padding: 16px;
+	border-radius: 12px;
+	margin-bottom: 24px;
+	font-size: 14px;
+	border: 1px solid rgba(239, 68, 68, 0.2);
+`;
+
+const SuccessMessage = styled.div`
+	background: rgba(34, 197, 94, 0.1);
+	color: var(--success);
+	padding: 16px;
+	border-radius: 12px;
+	margin-bottom: 24px;
+	font-size: 14px;
+	border: 1px solid rgba(34, 197, 94, 0.2);
+`;
+
+// Banner and system channels styles
 const BannerSection = styled.div`
 	margin-bottom: 24px;
 `;
@@ -254,7 +288,7 @@ const Banner = styled.div`
 	width: 100%;
 	height: 120px;
 	background: var(--background-tertiary);
-	border-radius: 4px;
+	border-radius: 12px;
 	display: flex;
 	align-items: flex-end;
 	justify-content: flex-end;
@@ -262,6 +296,20 @@ const Banner = styled.div`
 	color: var(--text);
 	font-weight: 600;
 	margin-bottom: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+`;
+
+const RemoveLink = styled.a`
+	color: var(--text-secondary);
+	font-size: 12px;
+	text-decoration: none;
+	cursor: pointer;
+	transition: color 0.15s ease;
+
+	&:hover {
+		color: var(--text);
+		text-decoration: underline;
+	}
 `;
 
 const SystemChannelsSection = styled.div`
@@ -272,86 +320,303 @@ const SystemChannelRow = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 12px 0;
-	border-bottom: 1px solid var(--background-tertiary);
+	padding: 16px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 `;
 
 const SystemChannelLabel = styled.span`
 	color: var(--text);
 	font-size: 14px;
+	font-weight: 500;
 `;
 
 const Select = styled.select`
-	padding: 6px 12px;
+	padding: 10px 14px;
 	background: var(--background-secondary);
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
 	color: var(--text);
 	font-size: 14px;
+	transition: all 0.15s ease;
+	
+	&:focus {
+		outline: none;
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+	}
 `;
 
-const SaveButton = styled.button`
-	padding: 8px 16px;
-	background: var(--background-secondary);
-	border: 1px solid var(--background-tertiary);
-	border-radius: 4px;
-	color: var(--text);
-	font-size: 14px;
+// Section component for form organization
+const Section = styled.div`
+	margin-bottom: 32px;
+`;
+
+// Close button components
+const CloseButton = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	cursor: pointer;
-	transition: all 0.2s ease;
-
+	transition: all 0.15s ease;
+	
 	&:hover {
-		background: var(--background-tertiary);
+		transform: translateY(-2px);
 	}
+`;
 
-	&:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+const CloseIcon = styled.div`
+	width: 32px;
+	height: 32px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 4px;
+	transition: all 0.15s ease;
+	
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.2);
+		background: rgba(255, 255, 255, 0.04);
 	}
+`;
+
+const CloseText = styled.span`
+	font-size: 12px;
+	color: var(--text-secondary);
+	font-weight: 500;
 `;
 
 // Categories section styles
 const CategoriesContent = styled.div`
-	padding: 24px;
+	padding: 0;
 `;
 
-const CategoryButton = styled.div<{ active?: boolean }>`
-	display: inline-block;
-	padding: 8px 16px;
-	margin: 4px;
-	background: ${props => props.active ? 'var(--background-secondary)' : 'var(--background-tertiary)'};
-	border-radius: 4px;
+const CategorySection = styled.div`
+	background: var(--background-secondary);
+	border-radius: 16px;
+	padding: 32px;
+	margin-bottom: 24px;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+`;
+
+const CategoryHeader = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+`;
+
+const CategoryTitle = styled.h3`
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
 	color: var(--text);
+`;
+
+const CreateCategoryButton = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 20px;
+	background: var(--primary);
+	border: none;
+	border-radius: 12px;
+	color: white;
 	font-size: 14px;
+	font-weight: 600;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: all 0.15s ease;
 
 	&:hover {
-		background: var(--background-secondary);
+		background: var(--primary-hover);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 16px rgba(88, 101, 242, 0.3);
 	}
 `;
 
-const AddButton = styled.div`
-	display: inline-flex;
+const CategoryList = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+`;
+
+const CategoryItem = styled.div`
+	background: var(--background-tertiary);
+	border-radius: 12px;
+	padding: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	transition: all 0.15s ease;
+	
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.1);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+`;
+
+const CategoryInfo = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+`;
+
+const CategoryName = styled.span`
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--text);
+`;
+
+const CategoryActions = styled.div`
+	display: flex;
+	gap: 8px;
+`;
+
+const CategoryActionButton = styled.button<{ danger?: boolean }>`
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 32px;
-	height: 32px;
-	background: var(--background-tertiary);
-	border-radius: 4px;
-	color: var(--text);
-	font-size: 18px;
+	width: 36px;
+	height: 36px;
+	border-radius: 10px;
+	background: ${props => props.danger ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.06)'};
+	color: ${props => props.danger ? 'var(--error)' : 'var(--text)'};
+	border: none;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: all 0.15s ease;
 
 	&:hover {
-		background: var(--background-secondary);
+		background: ${props => props.danger ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
+		transform: translateY(-1px);
+	}
+`;
+
+const ChannelList = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+`;
+
+const ChannelItem = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	background: var(--background-primary);
+	border-radius: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.04);
+	transition: all 0.15s ease;
+	
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.08);
+		background: rgba(255, 255, 255, 0.02);
+	}
+`;
+
+const ChannelInfo = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+`;
+
+const ChannelIcon = styled.div`
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+`;
+
+const ChannelName = styled.span`
+	font-size: 14px;
+	color: var(--text);
+	font-weight: 500;
+`;
+
+const ChannelActions = styled.div`
+	display: flex;
+	gap: 6px;
+`;
+
+const ChannelActionButton = styled.button<{ danger?: boolean }>`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 6px;
+	background: ${props => props.danger ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.06)'};
+	color: ${props => props.danger ? 'var(--error)' : 'var(--text)'};
+	border: none;
+	cursor: pointer;
+	transition: all 0.15s ease;
+
+	&:hover {
+		background: ${props => props.danger ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
+		transform: scale(1.05);
+	}
+`;
+
+const AddChannelButton = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	color: var(--text);
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s ease;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.2);
+		transform: translateY(-1px);
+	}
+`;
+
+const DropdownMenu = styled.div`
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: var(--background-secondary);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	z-index: 10;
+	overflow: hidden;
+`;
+
+const DropdownItem = styled.div`
+	padding: 12px 16px;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+	font-size: 14px;
+	color: var(--text);
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	&:first-child {
+		border-radius: 12px 12px 0 0;
+	}
+
+	&:last-child {
+		border-radius: 0 0 12px 12px;
 	}
 `;
 
 // Roles section styles
 const RolesContent = styled.div`
-	padding: 24px;
+	padding: 0;
 `;
 
 const SectionHeader = styled.div`
@@ -450,7 +715,7 @@ const RoleActionButton = styled.button<{ danger?: boolean }>`
 
 // Invites section styles
 const InvitesContent = styled.div`
-	padding: 24px;
+	padding: 0;
 `;
 
 const CreateInviteButton = styled.button`
@@ -490,7 +755,7 @@ const NoInvitesMessage = styled.div`
 
 // Emojis section styles
 const EmojisContent = styled.div`
-	padding: 24px;
+	padding: 0;
 `;
 
 const WarningBanner = styled.div`
@@ -599,10 +864,7 @@ const EmojiCount = styled.div`
 	font-weight: 500;
 `;
 
-// Members section styles
-const MembersContent = styled.div`
-	padding: 24px;
-`;
+// Members section styles - Removed unused components
 
 const SearchInput = styled.input`
 	width: 100%;
@@ -624,59 +886,9 @@ const SearchInput = styled.input`
 	}
 `;
 
-const MemberCount = styled.div`
-	font-size: 14px;
-	font-weight: 600;
-	color: var(--text);
-	margin-bottom: 16px;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-`;
-
-const MemberItem = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 12px 0;
-	border-bottom: 1px solid var(--background-tertiary);
-`;
-
-const MemberInfo = styled.div`
-	display: flex;
-	align-items: center;
-	gap: 12px;
-`;
-
-const MemberAvatar = styled.div`
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	background: var(--background-tertiary);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--text);
-	font-size: 14px;
-	font-weight: 500;
-`;
-
-const MemberName = styled.span`
-	color: var(--text);
-	font-size: 14px;
-`;
-
-const MemberDropdown = styled.div`
-	color: var(--text-secondary);
-	cursor: pointer;
-`;
-
-const RolesSection = styled.div`
-	margin-top: 24px;
-`;
-
 // Bans section styles
 const BansContent = styled.div`
-	padding: 24px;
+	padding: 0;
 `;
 
 const BanHeaders = styled.div`
@@ -829,7 +1041,7 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 		}
 	});
 
-	const onSubmit = async (data: { serverName: string; serverDescription: string }) => {
+	const onSubmit = async (data: { serverName: string; serverDescription: string; serverBanner?: string }) => {
 		console.log("Form data:", data);
 		setError(null);
 		setSuccess(false);
@@ -838,13 +1050,15 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 		try {
 			// Use your existing REST client instead of raw fetch
 			const updatedGuildData = await app.rest.patch<{
-				name: string;
-				description: string;
+				name?: string;
+				description?: string;
+				banner?: string;
 			}, any>(
 				Routes.guild(guild.id),
 				{
 					name: data.serverName,
 					description: data.serverDescription,
+					banner: data.serverBanner,
 				}
 			);
 
@@ -853,6 +1067,7 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 			// Update only the specific properties we changed to avoid MobX computed property errors
 			guild.name = updatedGuildData.name;
 			guild.description = updatedGuildData.description;
+			guild.banner = updatedGuildData.banner;
 
 			setSuccess(true);
 			setTimeout(() => {
@@ -1040,82 +1255,67 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 	};
 
 	const renderOverview = () => (
-		<OverviewSection as="form" onSubmit={handleSubmit(onSubmit)}>
+		<OverviewContent as="form" onSubmit={handleSubmit(onSubmit)}>
 			{/* Error Message */}
 			{error && (
-				<div style={{
-					background: 'var(--error)',
-					color: 'white',
-					padding: '12px',
-					borderRadius: '4px',
-					marginBottom: '16px',
-					fontSize: '14px'
-				}}>
+				<ErrorMessage>
 					{error}
-				</div>
+				</ErrorMessage>
 			)}
 
 			{/* Success Message */}
 			{success && (
-				<div style={{
-					background: 'var(--success)',
-					color: 'white',
-					padding: '12px',
-					borderRadius: '4px',
-					marginBottom: '16px',
-					fontSize: '14px'
-				}}>
+				<SuccessMessage>
 					Server updated successfully!
-				</div>
+				</SuccessMessage>
 			)}
 
-			<Section>
+			<FormSection>
 				<SectionTitle>Server Name</SectionTitle>
-				<AvatarSection>
-					<Avatar>
-						{guild.name?.charAt(0).toUpperCase() || 'G'}
-					</Avatar>
-					<AvatarContent>
-						<InputLabel>Server Name</InputLabel>
-						<Input
-							type="text"
-							{...register("serverName", { 
-								required: "Server name is required",
-								minLength: { value: 2, message: "Server name must be at least 2 characters" },
-								maxLength: { value: 100, message: "Server name must be less than 100 characters" }
-							})}
-							placeholder="Enter server name"
-						/>
-						<RemoveLink>Remove (max 2.50 MB)</RemoveLink>
-					</AvatarContent>
-				</AvatarSection>
-			</Section>
+				<InputGroup>
+					<InputLabel>Server Name</InputLabel>
+					<Input
+						type="text"
+						{...register("serverName", { 
+							required: "Server name is required",
+							minLength: { value: 2, message: "Server name must be at least 2 characters" },
+							maxLength: { value: 100, message: "Server name must be less than 100 characters" }
+						})}
+						placeholder="Enter server name"
+					/>
+				</InputGroup>
+			</FormSection>
 
-			<Section>
+			<FormSection>
 				<SectionTitle>Server Description</SectionTitle>
-				<TextArea
-					placeholder="Add a topic..."
-					{...register("serverDescription", {
-						maxLength: { value: 500, message: "Description must be less than 500 characters" }
-					})}
-				/>
-				<MarkdownInfo>
-					<Icon icon="mdiFormatText" size="16px" />
-					Server descriptions support Markdown formatting. <a href="#" style={{color: '#00b0f4'}}>Learn more here.</a>
-				</MarkdownInfo>
-			</Section>
+				<InputGroup>
+					<InputLabel>Description</InputLabel>
+					<TextArea
+						placeholder="Add a topic..."
+						{...register("serverDescription", {
+							maxLength: { value: 500, message: "Description must be less than 500 characters" }
+						})}
+					/>
+				</InputGroup>
+			</FormSection>
 
-			<Section>
+			<FormSection>
 				<SectionTitle>Custom Banner</SectionTitle>
 				<BannerSection>
 					<Banner>
 						Benguin <Icon icon="mdiCheckCircle" size="16px" color="#00b0f4" />
 					</Banner>
 					<RemoveLink>Remove (max 6.00 MB)</RemoveLink>
+					<InputLabel>Banner URL</InputLabel>
+					<Input
+						type="text"
+						{...register("serverBanner")}
+						placeholder="Enter banner URL"
+					/>
 				</BannerSection>
-			</Section>
+			</FormSection>
 
-			<Section>
+			<FormSection>
 				<SectionTitle>System Message Channels</SectionTitle>
 				<SystemChannelsSection>
 					<SystemChannelRow>
@@ -1143,38 +1343,36 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 						</Select>
 					</SystemChannelRow>
 				</SystemChannelsSection>
-			</Section>
+			</FormSection>
 
-			<SaveButton 
-				type="submit" 
-				disabled={isSaving || isSubmitting}
-				style={{
-					background: isSaving ? 'var(--background-tertiary)' : 'var(--background-secondary)',
-					cursor: isSaving ? 'not-allowed' : 'pointer'
-				}}
-			>
-				{isSaving ? 'Saving...' : 'Save Changes'}
-			</SaveButton>
-		</OverviewSection>
+			<ButtonGroup>
+				<CancelButton onClick={handleClose}>Cancel</CancelButton>
+				<SaveButton 
+					type="submit" 
+					disabled={isSaving || isSubmitting}
+				>
+					{isSaving ? 'Saving...' : 'Save Changes'}
+				</SaveButton>
+			</ButtonGroup>
+		</OverviewContent>
 	);
 
 	const renderCategories = () => (
 		<CategoriesContent>
 			<Section>
-				<SectionTitle>Categories</SectionTitle>
-				
+				<CategoryHeader>
+					<CategoryTitle>Categories</CategoryTitle>
+					<CreateCategoryButton onClick={() => setIsCreatingCategory(true)}>
+						<Icon icon="mdiPlus" size="16px" />
+						Create Category
+					</CreateCategoryButton>
+				</CategoryHeader>
+
 				{/* Error/Success Messages */}
 				{error && (
-					<div style={{
-						background: 'var(--error)',
-						color: 'white',
-						padding: '12px',
-						borderRadius: '4px',
-						marginBottom: '16px',
-						fontSize: '14px'
-					}}>
+					<ErrorMessage>
 						{error}
-					</div>
+					</ErrorMessage>
 				)}
 
 				{/* Create New Category/Channel Dropdown */}
@@ -1276,7 +1474,7 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 											>
 												Cancel
 											</SaveButton>
-										</div>
+			</div>
 									</div>
 								)}
 
@@ -1448,166 +1646,162 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 						</div>
 					</div>
 				) : (
-					categories.map((category) => (
-						<div key={category.id} style={{
-							background: 'var(--background-secondary)',
-							borderRadius: '8px',
-							marginBottom: '12px',
-							border: '1px solid var(--background-tertiary)',
-							overflow: 'hidden'
-						}}>
-							{/* Category Header */}
-							<div style={{
-								background: 'var(--background-tertiary)',
-								padding: '12px 16px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between'
-							}}>
-								{editingCategoryId === category.id ? (
-									<Input
-										type="text"
-										value={editingCategoryName}
-										onChange={(e) => setEditingCategoryName(e.target.value)}
-										style={{ flex: 1, marginRight: '8px' }}
-									/>
-								) : (
-									<span style={{ 
-										fontWeight: '600',
-										color: 'var(--text)',
-										fontSize: '14px'
-									}}>
-										{category.name}
-									</span>
-								)}
-								
-								<div style={{ display: 'flex', gap: '4px' }}>
-									{editingCategoryId === category.id ? (
-										<>
-											<button
-												onClick={() => updateCategory(category.id)}
-												disabled={!editingCategoryName.trim()}
-												style={{
-													background: 'var(--primary)',
-													color: 'white',
-													border: 'none',
-													borderRadius: '4px',
-													padding: '4px 8px',
-													fontSize: '12px',
-													cursor: 'pointer',
-													opacity: editingCategoryName.trim() ? 1 : 0.5
-												}}
-											>
-												Save
-											</button>
-											<button
-												onClick={() => {
-													setEditingCategoryId(null);
-													setEditingCategoryName('');
-												}}
-												style={{
-													background: 'var(--background-tertiary)',
-													color: 'var(--text-muted)',
-													border: 'none',
-													borderRadius: '4px',
-													padding: '4px 8px',
-													fontSize: '12px',
-													cursor: 'pointer'
-												}}
-											>
-												Cancel
-											</button>
-										</>
-									) : (
-										<>
-											<button
-												onClick={() => {
-													setEditingCategoryId(category.id);
-													setEditingCategoryName(category.name || '');
-												}}
-												style={{
-													background: 'var(--background-tertiary)',
-													color: 'var(--text-muted)',
-													border: 'none',
-													borderRadius: '4px',
-													padding: '4px 8px',
-													fontSize: '12px',
-													cursor: 'pointer'
-												}}
-											>
-												<Icon icon="mdiPencil" size="12px" />
-											</button>
-											<button
-												onClick={() => deleteCategory(category.id)}
-												style={{
-													background: 'var(--error)',
-													color: 'white',
-													border: 'none',
-													borderRadius: '4px',
-													padding: '4px 8px',
-													fontSize: '12px',
-													cursor: 'pointer'
-												}}
-											>
-												<Icon icon="mdiDelete" size="12px" />
-											</button>
-										</>
-									)}
-								</div>
-							</div>
-							
-							{/* Category Channels */}
-							<div style={{ padding: '8px 16px' }}>
-								{/* Text Channels */}
-								{textChannels
-									.filter(channel => channel.parentId === category.id)
-									.map(channel => (
-										<div key={channel.id} style={{
-											display: 'flex',
-											alignItems: 'center',
-											padding: '4px 0',
-											color: 'var(--text-muted)',
-											fontSize: '13px'
-										}}>
-											<Icon icon="mdiPound" size="14px" style={{ marginRight: '8px' }} />
-											{channel.name}
-										</div>
-									))
-								}
-								
-								{/* Voice Channels */}
-								{voiceChannels
-									.filter(channel => channel.parentId === category.id)
-									.map(channel => (
-										<div key={channel.id} style={{
-											display: 'flex',
-											alignItems: 'center',
-											padding: '4px 0',
-											color: 'var(--text-muted)',
-											fontSize: '13px'
-										}}>
-											<Icon icon="mdiVolumeHigh" size="14px" style={{ marginRight: '8px' }} />
-											{channel.name}
-										</div>
-									))
-								}
-								
-								{/* No channels in category */}
-								{textChannels.filter(ch => ch.parentId === category.id).length === 0 &&
-								 voiceChannels.filter(ch => ch.parentId === category.id).length === 0 && (
-									<div style={{
-										color: 'var(--text-muted)',
-										fontSize: '12px',
-										fontStyle: 'italic',
-										padding: '8px 0',
-										textAlign: 'center'
-									}}>
-										No channels in this category
-									</div>
-								)}
-							</div>
-						</div>
-					))
+					<CategorySection>
+						<CategoryList>
+							{categories.map((category) => (
+								<CategoryItem key={category.id}>
+									<CategoryInfo>
+										{editingCategoryId === category.id ? (
+											<Input
+												type="text"
+												value={editingCategoryName}
+												onChange={(e) => setEditingCategoryName(e.target.value)}
+												style={{ flex: 1, marginRight: '8px' }}
+											/>
+										) : (
+											<CategoryName>{category.name}</CategoryName>
+										)}
+										
+										<CategoryActions>
+											{editingCategoryId === category.id ? (
+												<>
+													<button
+														onClick={() => updateCategory(category.id)}
+														disabled={!editingCategoryName.trim()}
+														style={{
+															background: 'var(--primary)',
+															color: 'white',
+															border: 'none',
+															borderRadius: '4px',
+															padding: '4px 8px',
+															fontSize: '12px',
+															cursor: 'pointer',
+															opacity: editingCategoryName.trim() ? 1 : 0.5
+														}}
+													>
+														Save
+													</button>
+													<button
+														onClick={() => {
+															setEditingCategoryId(null);
+															setEditingCategoryName('');
+														}}
+														style={{
+															background: 'var(--background-tertiary)',
+															color: 'var(--text-muted)',
+															border: 'none',
+															borderRadius: '4px',
+															padding: '4px 8px',
+															fontSize: '12px',
+															cursor: 'pointer'
+														}}
+													>
+														Cancel
+													</button>
+												</>
+											) : (
+												<>
+													<button
+														onClick={() => {
+															setEditingCategoryId(category.id);
+															setEditingCategoryName(category.name || '');
+														}}
+														style={{
+															background: 'var(--background-tertiary)',
+															color: 'var(--text-muted)',
+															border: 'none',
+															borderRadius: '4px',
+															padding: '4px 8px',
+															fontSize: '12px',
+															cursor: 'pointer'
+														}}
+													>
+														<Icon icon="mdiPencil" size="12px" />
+													</button>
+													<button
+														onClick={() => deleteCategory(category.id)}
+														style={{
+															background: 'var(--error)',
+															color: 'white',
+															border: 'none',
+															borderRadius: '4px',
+															padding: '4px 8px',
+															fontSize: '12px',
+															cursor: 'pointer'
+														}}
+													>
+														<Icon icon="mdiDelete" size="12px" />
+													</button>
+												</>
+											)}
+										</CategoryActions>
+									</CategoryInfo>
+									
+									<ChannelList>
+										{/* Text Channels */}
+										{textChannels
+											.filter(channel => channel.parentId === category.id)
+											.map(channel => (
+												<ChannelItem key={channel.id}>
+													<ChannelInfo>
+														<ChannelIcon>
+															<Icon icon="mdiPound" size="14px" />
+														</ChannelIcon>
+														<ChannelName>{channel.name}</ChannelName>
+													</ChannelInfo>
+													<ChannelActions>
+														<ChannelActionButton>
+															<Icon icon="mdiPencil" size="14px" />
+														</ChannelActionButton>
+														<ChannelActionButton danger>
+															<Icon icon="mdiDelete" size="14px" />
+														</ChannelActionButton>
+													</ChannelActions>
+												</ChannelItem>
+											))
+										}
+										
+										{/* Voice Channels */}
+										{voiceChannels
+											.filter(channel => channel.parentId === category.id)
+											.map(channel => (
+												<ChannelItem key={channel.id}>
+													<ChannelInfo>
+														<ChannelIcon>
+															<Icon icon="mdiVolumeHigh" size="14px" />
+														</ChannelIcon>
+														<ChannelName>{channel.name}</ChannelName>
+													</ChannelInfo>
+													<ChannelActions>
+														<ChannelActionButton>
+															<Icon icon="mdiPencil" size="14px" />
+														</ChannelActionButton>
+														<ChannelActionButton danger>
+															<Icon icon="mdiDelete" size="14px" />
+														</ChannelActionButton>
+													</ChannelActions>
+												</ChannelItem>
+											))
+										}
+										
+										{/* No channels in category */}
+										{textChannels.filter(ch => ch.parentId === category.id).length === 0 &&
+										 voiceChannels.filter(ch => ch.parentId === category.id).length === 0 && (
+											<div style={{
+												color: 'var(--text-muted)',
+												fontSize: '12px',
+												fontStyle: 'italic',
+												padding: '8px 0',
+												textAlign: 'center'
+											}}>
+												No channels in this category
+											</div>
+										)}
+									</ChannelList>
+								</CategoryItem>
+							))}
+						</CategoryList>
+					</CategorySection>
 				)}
 
 				{/* Show uncategorized channels if they exist */}
@@ -1652,75 +1846,7 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 		</CategoriesContent>
 	);
 
-	const renderRoles = () => (
-		<RolesContent>
-			<SectionHeader>
-				<SectionTitle>Roles</SectionTitle>
-				<CreateRoleButton onClick={() => setShowCreateRoleModal(true)}>
-					<Icon icon="mdiPlus" size={16} />
-					Create Role
-				</CreateRoleButton>
-			</SectionHeader>
-
-			{/* Roles List */}
-			<RolesList>
-				{guild.roles.map((role) => (
-					<RoleItem key={role.id}>
-						<RoleInfo>
-							<RoleColor color={role.color || '#99aab5'} />
-							<RoleDetails>
-								<RoleName>{role.name}</RoleName>
-								<RoleMemberCount>
-									Role ID: {role.id}
-								</RoleMemberCount>
-							</RoleDetails>
-						</RoleInfo>
-						<RoleActions>
-							<RoleActionButton onClick={() => handleEditRole(role)}>
-								<Icon icon="mdiPencil" size={16} />
-							</RoleActionButton>
-							{role.name !== '@everyone' && (
-								<RoleActionButton 
-									onClick={() => handleDeleteRole(role)}
-									danger
-								>
-									<Icon icon="mdiDelete" size={16} />
-								</RoleActionButton>
-							)}
-						</RoleActions>
-					</RoleItem>
-				))}
-			</RolesList>
-
-			{/* Create Role Modal */}
-			{showCreateRoleModal && (
-				<CreateRoleModal
-					guild={guild}
-					onClose={() => setShowCreateRoleModal(false)}
-					onRoleCreated={handleRoleCreated}
-				/>
-			)}
-
-			{/* Edit Role Modal */}
-			{editingRole && (
-				<EditRoleModal
-					role={editingRole}
-					guild={guild}
-					onClose={() => setEditingRole(null)}
-					onRoleUpdated={handleRoleUpdated}
-				/>
-			)}
-
-			{/* Delete Role Confirmation */}
-			{deletingRole && (
-				<DeleteRoleModal
-					role={deletingRole}
-					onClose={() => setDeletingRole(null)}
-					onRoleDeleted={handleRoleDeleted}
-				/>
-			)}
-		</RolesContent>
-	);
+	const renderRoles = () => <RolesSettingsPage />;
 
 	const renderEmojis = () => (
 		<EmojisContent>
@@ -1757,30 +1883,7 @@ function ServerSettingsModal(props: ModalProps<"server_settings">) {
 		</EmojisContent>
 	);
 
-	const renderMembers = () => (
-		<MembersContent>
-			<SearchInput 
-				placeholder="Search for a specific user..." 
-			/>
-			
-			<MemberCount>1 Members</MemberCount>
-			
-			<MemberItem>
-				<MemberInfo>
-					<MemberAvatar>B</MemberAvatar>
-					<MemberName>benguin</MemberName>
-				</MemberInfo>
-				<MemberDropdown>
-					<Icon icon="mdiChevronDown" size="16px" />
-				</MemberDropdown>
-			</MemberItem>
-
-			<RolesSection>
-				<SectionTitle>Roles</SectionTitle>
-				<SaveButton>Save</SaveButton>
-			</RolesSection>
-		</MembersContent>
-	);
+	const renderMembers = () => <MembersSettingsPage />;
 
 	const renderInvites = () => (
 		<InvitesContent>

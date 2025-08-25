@@ -7,24 +7,27 @@ import {
 	UserPremiumType,
 } from "@spacebarchat/spacebar-api-types/v9";
 import { REST } from "@utils";
-import { makeAutoObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 export default class AccountStore {
 	id: string;
-	@observable username: string;
-	@observable discriminator: string;
-	@observable avatar: string | null;
+	username: string;
+	discriminator: string;
+	avatar: string | null;
+	display_name?: string;
+	bio?: string;
+	banner?: string | null;
 
-	@observable avatarDecoration?: unknown;
-	@observable email: string | null = null;
-	@observable verified = false;
-	@observable bot = false;
-	@observable system = false;
-	@observable mfaEnabled = false;
-	@observable premiumType?: UserPremiumType.NitroClassic | UserPremiumType.Nitro | UserPremiumType.NitroBasic;
-	@observable flags?: UserFlags;
-	@observable publicFlags?: UserFlags;
-	@observable raw: APIUser;
+	avatarDecoration?: unknown;
+	email: string | null = null;
+	verified = false;
+	bot = false;
+	system = false;
+	mfaEnabled = false;
+	premiumType?: UserPremiumType.NitroClassic | UserPremiumType.Nitro | UserPremiumType.NitroBasic;
+	flags?: UserFlags;
+	publicFlags?: UserFlags;
+	raw: APIUser;
 	//   phone: string | null;
 	//   nsfwAllowed: boolean | null;
 
@@ -35,6 +38,9 @@ export default class AccountStore {
 		this.username = user.username;
 		this.discriminator = user.discriminator;
 		this.avatar = user.avatar;
+		this.display_name = (user as any).display_name;
+		this.bio = (user as any).bio;
+		this.banner = (user as any).banner;
 		// this.avatarDecoration = user.avatar_decoration;
 		if (user.email) {
 			this.email = user.email;
@@ -89,5 +95,4 @@ export default class AccountStore {
 	 * Update the user's banner
 	 * @param bannerUrl The new banner URL
 	 */
-
 }

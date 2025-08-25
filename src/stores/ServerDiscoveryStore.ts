@@ -1,6 +1,7 @@
 import { action, computed, makeAutoObservable, observable } from "mobx";
 import { Logger } from "@utils";
 import AppStore from "./AppStore";
+import REST from "@utils/REST";
 
 export interface DiscoverableGuild {
 	id: string;
@@ -94,7 +95,7 @@ export default class ServerDiscoveryStore {
 
 		try {
 			this.logger.debug("Loading discovery categories");
-			const response = await fetch(`${this.app.rest.makeAPIUrl("/discovery/categories")}`);
+			const response = await fetch(`${REST.makeAPIUrl("/discovery/categories")}`);
 			
 			if (!response.ok) {
 				throw new Error(`Failed to load categories: ${response.status}`);
@@ -130,7 +131,7 @@ export default class ServerDiscoveryStore {
 				params.append("categories", this.selectedCategory);
 			}
 
-			const response = await fetch(`${this.app.rest.makeAPIUrl("/discoverable-guilds")}?${params}`);
+			const response = await fetch(`${REST.makeAPIUrl("/discoverable-guilds")}?${params}`);
 			
 			if (!response.ok) {
 				throw new Error(`Failed to load servers: ${response.status}`);

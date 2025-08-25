@@ -23,16 +23,18 @@ const Wrapper = styled(Container)<{ active?: boolean; hasImage?: boolean }>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 48px;
-	height: 48px;
-	border-radius: ${(props) => (props.active ? "30%" : "50%")};
+	width: 52px;
+	height: 52px;
+	border-radius: ${(props) => (props.active ? "16px" : "14px")};
 	background-color: ${(props) =>
-		props.hasImage ? "transparent" : props.active ? "var(--primary)" : "var(--background-secondary)"};
-	transition: border-radius 0.2s ease, background-color 0.2s ease;
+		props.hasImage ? "transparent" : props.active ? "var(--primary)" : "var(--background-tertiary)"};
+	border: 1px solid ${(props) => (props.active ? "rgba(88, 101, 242, 0.3)" : "rgba(255, 255, 255, 0.06)")};
+	overflow: hidden;
 
-	&:hover {
-		border-radius: 30%;
-		background-color: ${(props) => (props.hasImage ? "transparent" : "var(--primary)")};
+	img {
+		width: 52px;
+		height: 52px;
+		border-radius: 14px;
 	}
 `;
 
@@ -58,12 +60,12 @@ function GuildItem({ guild, active }: Props) {
 		else if (isHovered) return setPillType("hover");
 		// TODO: unread
 		else return setPillType("none");
-	}, [app.activeGuildId, isHovered]);
+	}, [app.activeChannelId, isHovered]);
 
 	const doNavigate = () => {
 		const channel = guild.channels.find((x) => {
 			const permission = Permissions.getPermission(app.account!.id, guild, x);
-			return permission.has("VIEW_CHANNEL") && x.type !== ChannelType.GuildCategory;
+			return permission.has("ViewChannel") && x.type !== ChannelType.GuildCategory;
 		});
 		navigate(`/channels/${guild.id}${channel ? `/${channel.id}` : ""}`);
 	};

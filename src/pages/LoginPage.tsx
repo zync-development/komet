@@ -195,21 +195,7 @@ function LoginPage() {
 
 	return (
 		<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
-			<AuthContainer>
-				<HeaderContainer>
-					{AUTH_NO_BRANDING ? (
-						<>
-							<Header>Login to Komet</Header>
-						</>
-					) : (
-						<>
-							<KometLogoBlue height={48} width="100%" />
-							<SubHeader noBranding>Log into Komet</SubHeader>
-						</>
-					)}
-				</HeaderContainer>
-
-				<FormContainer onSubmit={onSubmit}>
+			<FormContainer onSubmit={onSubmit}>
 					<InputContainer marginBottom={true} style={{ marginTop: 0 }}>
 						<LabelWrapper error={!!errors.instance}>
 							<InputLabel>Instance</InputLabel>
@@ -241,7 +227,7 @@ function LoginPage() {
 								onChange={handleInstanceChange}
 								error={!!errors.instance}
 								disabled={loading}
-								autocomplete="off"
+								autoComplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>
@@ -266,7 +252,7 @@ function LoginPage() {
 								{...register("login", { required: true })}
 								error={!!errors.login}
 								disabled={loading}
-								autocomplete="off"
+								autoComplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>
@@ -290,7 +276,7 @@ function LoginPage() {
 								{...register("password", { required: true })}
 								error={!!errors.password}
 								disabled={loading}
-								autocomplete="off"
+								autoComplete="off"
 							/>
 						</InputWrapper>
 					</InputContainer>
@@ -316,7 +302,6 @@ function LoginPage() {
 						</AuthSwitchPageLink>
 					</AuthSwitchPageContainer>
 				</FormContainer>
-			</AuthContainer>
 		</AnimatedBackground>
 	);
 }

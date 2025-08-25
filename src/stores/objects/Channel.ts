@@ -14,7 +14,7 @@ import type {
 } from "@spacebarchat/spacebar-api-types/v9";
 import { ChannelType, Routes } from "@spacebarchat/spacebar-api-types/v9";
 import { AppStore, MessageStore } from "@stores";
-import { APIError, PermissionResolvable, Permissions } from "@utils";
+import { APIError, Permissions } from "@utils";
 import Logger from "@utils/Logger";
 import { ObservableMap, action, computed, makeAutoObservable, observable } from "mobx";
 import murmur from "murmurhash-js/murmurhash3_gc";
@@ -297,8 +297,8 @@ export default class Channel {
 		for (const overwrite of this.permissionOverwrites) {
 			const { id, allow, deny } = overwrite;
 
-			if (allow.toBigInt() & Permissions.FLAGS.VIEW_CHANNEL) perms.push(`allow:${id}`);
-			else if (deny.toBigInt() & Permissions.FLAGS.VIEW_CHANNEL) perms.push(`deny:${id}`);
+			    if (BigInt(allow) & Permissions.FLAGS.VIEW_CHANNEL) perms.push(`allow:${id}`);
+    else if (BigInt(deny) & Permissions.FLAGS.VIEW_CHANNEL) perms.push(`deny:${id}`);
 		}
 
 		if (perms.length) {

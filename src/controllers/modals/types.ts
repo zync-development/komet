@@ -7,17 +7,22 @@ import {
 	APIEmbedVideo,
 	APIInvite,
 } from "@spacebarchat/spacebar-api-types/v9";
-import { Channel, Guild, GuildMember, Message } from "@structures";
+import { Channel, Guild, GuildMember, Message, User } from "@structures";
 
 export type Modal = {
 	key?: string;
 } & (
 	| {
-			type: "add_server" | "add_friend" | "create_server" | "join_server" | "settings";
+			type: "add_server" | "add_friend" | "create_server" | "join_server" | "settings" | "new_message" | "pending_friend_requests";
 	  }
 	| {
 			type: "server_settings";
 			target: Guild;
+	  }
+	| {
+			type: "user_profile";
+			user: User;
+			member?: GuildMember;
 	  }
 	| {
 			type: "error";

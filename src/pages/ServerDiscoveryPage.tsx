@@ -5,6 +5,7 @@ import Icon from "@components/Icon";
 import { useAppStore } from "@hooks/useAppStore";
 import { observer } from "mobx-react-lite";
 import { ServerDiscoveryStore } from "@stores";
+import REST from "@utils/REST";
 
 const Container = styled.div`
 	display: flex;
@@ -447,7 +448,7 @@ function ServerDiscoveryPage() {
 								<ServerIcon hasIcon={!!server.icon}>
 									{server.icon ? (
 										<img
-											src={`${app.rest.makeCDNUrl(`/guild-icons/${server.id}/${server.icon}`)}`}
+											src={`${REST.makeCDNUrl(`/guild-icons/${server.id}/${server.icon}`)}`}
 											alt={server.name}
 										/>
 									) : (

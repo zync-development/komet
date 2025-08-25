@@ -5,6 +5,7 @@ import {
 	UserContextMenu,
 } from "@components/contextMenus";
 import ChannelContextMenu from "@components/contextMenus/ChannelContextMenu";
+import ChannelListContextMenu from "@components/ChannelList/ChannelListContextMenu";
 import { ContextMenuProps } from "@contexts/ContextMenuContext";
 import { autoUpdate, flip, offset, shift, useDismiss, useFloating, useInteractions, useRole } from "@floating-ui/react";
 import { useMemo, useState } from "react";
@@ -18,6 +19,7 @@ export const ContextMenuComponents: Components = {
 	channel: ChannelContextMenu,
 	channelMention: ChannelMentionContextMenu,
 	guild: GuildContextMenu,
+	channel_list: ChannelListContextMenu,
 };
 
 export default function () {

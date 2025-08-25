@@ -1,3 +1,4 @@
+import { ModalProps, modalController } from "@/controllers/modals";
 import { useAppStore } from "@hooks/useAppStore";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
@@ -24,10 +25,10 @@ const Label = styled.label`
 
 const Select = styled.select`
 	width: 100%;
-	padding: 10px 12px;
+	padding: 10px;
 	border: 1px solid var(--background-tertiary);
 	border-radius: 6px;
-	background: var(--background-secondary);
+	background: var(--background-primary);
 	color: var(--text);
 	font-size: 14px;
 	
@@ -39,10 +40,10 @@ const Select = styled.select`
 
 const Input = styled.input`
 	width: 100%;
-	padding: 10px 12px;
+	padding: 10px;
 	border: 1px solid var(--background-tertiary);
 	border-radius: 6px;
-	background: var(--background-secondary);
+	background: var(--background-primary);
 	color: var(--text);
 	font-size: 14px;
 	
@@ -59,9 +60,9 @@ const CheckboxContainer = styled.div`
 `;
 
 const Checkbox = styled.input`
-	width: 18px;
-	height: 18px;
-	accent-color: var(--primary);
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
 `;
 
 const CheckboxLabel = styled.label`
@@ -153,15 +154,9 @@ const InviteDetails = styled.div`
 	color: var(--text-secondary);
 `;
 
-interface CreateInviteModalProps {
-	guild: any;
-	onClose: () => void;
-	onInviteCreated: (invite: any) => void;
-}
-
-function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModalProps) {
+export function CreateInviteModal({ target: channel, ...props }: ModalProps<"create_invite">) {
 	const app = useAppStore();
-	const [selectedChannel, setSelectedChannel] = useState('');
+	const [selectedChannel, setSelectedChannel] = useState(channel?.id || '');
 	const [maxUses, setMaxUses] = useState<number | null>(null);
 	const [expiresIn, setExpiresIn] = useState<number | null>(null);
 	const [temporary, setTemporary] = useState(false);
@@ -169,9 +164,22 @@ function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModa
 	const [error, setError] = useState<string | null>(null);
 	const [createdInvite, setCreatedInvite] = useState<any>(null);
 
+	// Get the guild from the channel
+	const guild = channel?.guild;
+	
+	// Debug logging
+	console.log('CreateInviteModal Debug:', {
+		channel,
+		channelId: channel?.id,
+		guild,
+		guildId: channel?.guildId,
+		appGuilds: app.guilds.count,
+		selectedChannel
+	});
+	
 	// Get text channels for invite creation
-	const textChannels = guild.channels?.filter((channel: any) => 
-		channel.type === ChannelType.GuildText
+	const textChannels = guild?.channels?.filter((ch: any) => 
+		ch.type === ChannelType.GuildText
 	) || [];
 
 	const handleCreateInvite = async () => {
@@ -190,6 +198,12 @@ function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModa
 				temporary: temporary
 			};
 
+			console.log('Creating invite with data:', {
+				channelId: selectedChannel,
+				inviteData,
+				apiUrl: `/v9/channels/${selectedChannel}/invites`
+			});
+
 			const newInvite = await app.rest.post(`/v9/channels/${selectedChannel}/invites`, inviteData);
 			
 			console.log('Invite created successfully:', newInvite);
@@ -197,6 +211,12 @@ function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModa
 			
 		} catch (error: any) {
 			console.error('Error creating invite:', error);
+			console.error('Error details:', {
+				status: error.status,
+				statusText: error.statusText,
+				response: error.response,
+				message: error.message
+			});
 			setError('Failed to create invite: ' + (error.message || 'Unknown error'));
 		} finally {
 			setIsCreating(false);
@@ -212,17 +232,36 @@ function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModa
 	};
 
 	const handleClose = () => {
-		onClose();
+		modalController.closeAll();
 	};
 
 	const handleDone = () => {
-		if (createdInvite) {
-			onInviteCreated(createdInvite);
-		}
+		modalController.closeAll();
 	};
+
+	if (!guild) {
+		return (
+			<Modal
+				{...props}
+				title="Create Invite"
+				description="Unable to create invite - guild not found."
+				onClose={handleClose}
+			>
+				<FormContainer>
+					<ErrorMessage>Failed to load guild information.</ErrorMessage>
+					<ButtonGroup>
+						<CancelButton onClick={handleClose}>
+							Close
+						</CancelButton>
+					</ButtonGroup>
+				</FormContainer>
+			</Modal>
+		);
+	}
 
 	return (
 		<Modal
+			{...props}
 			title="Create Invite"
 			description={`Create an invite for ${guild.name}`}
 			onClose={handleClose}
@@ -255,9 +294,9 @@ function CreateInviteModal({ guild, onClose, onInviteCreated }: CreateInviteModa
 								onChange={(e) => setSelectedChannel(e.target.value)}
 							>
 								<option value="">Select a channel</option>
-								{textChannels.map((channel: any) => (
-									<option key={channel.id} value={channel.id}>
-										#{channel.name}
+								{textChannels.map((ch: any) => (
+									<option key={ch.id} value={ch.id}>
+										#{ch.name}
 									</option>
 								))}
 							</Select>

@@ -104,7 +104,7 @@ function ChannelContextMenu({ channel }: MenuProps) {
 			)}
 			
 			{/* Show edit/delete for both channels and categories */}
-			{channel.hasPermission("MANAGE_CHANNELS") && (
+			{channel.hasPermission("ManageChannel") && (
 				<>
 					<ContextMenuButton icon="mdiPencil" onClick={editChannel}>
 						Edit {isCategory ? "Category" : "Channel"}

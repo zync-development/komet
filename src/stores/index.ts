@@ -17,3 +17,5 @@ export { default as ServerDiscoveryStore } from "./ServerDiscoveryStore";
 export { default as ThemeStore } from "./ThemeStore";
 export { default as UpdaterStore } from "./UpdaterStore";
 export { default as UserStore } from "./UserStore";
+export { default as UIStore } from "./UIStore";
+export { default as ChannelPermissionStore } from "./ChannelPermissionStore";

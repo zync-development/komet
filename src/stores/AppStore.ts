@@ -19,9 +19,12 @@ import {
 	UpdaterStore,
 	UserStore,
 	ServerDiscoveryStore,
+	UIStore,
+	ChannelPermissionStore,
 } from "@stores";
 import { Channel, Guild } from "@structures";
 import EmojiStore from "./EmojiStore";
+import RelationshipStore from "./RelationshipStore";
 
 // dev thing to force toggle branding on auth pages for testing.
 export const AUTH_NO_BRANDING = false;
@@ -48,6 +51,7 @@ export default class AppStore {
 	@observable channels = new ChannelStore(this);
 	@observable users = new UserStore(this);
 	@observable privateChannels = new PrivateChannelStore(this);
+	@observable relationships = new RelationshipStore(this);
 	@observable rest = new REST(this);
 	@observable experiments = new ExperimentsStore();
 	@observable presences = new PresenceStore(this);
@@ -55,6 +59,8 @@ export default class AppStore {
 	@observable queue = new MessageQueue(this);
 	@observable serverDiscovery = new ServerDiscoveryStore(this);
 	@observable updaterStore: UpdaterStore | null = null;
+	@observable ui = new UIStore();
+	@observable channelPermissions = new ChannelPermissionStore();
 
 	@observable activeGuild: Guild | null = null;
 	@observable activeGuildId: Snowflake | undefined | "@me" = "@me";

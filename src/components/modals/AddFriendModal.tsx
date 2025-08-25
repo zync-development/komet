@@ -3,7 +3,7 @@ import { Input, InputErrorText, InputLabel, LabelWrapper } from "@components/Aut
 import { TextDivider } from "@components/Divider";
 import { useAppStore } from "@hooks/useAppStore";
 import useLogger from "@hooks/useLogger";
-import { Routes, ChannelType } from "@spacebarchat/spacebar-api-types/v9";
+import { Routes, ChannelType, APIRelationshipType } from "@spacebarchat/spacebar-api-types/v9";
 import { messageFromFieldError } from "@utils";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -84,8 +84,26 @@ const ActionButton = styled.button`
 	}
 `;
 
+const StatusBadge = styled.div<{ type: 'success' | 'warning' | 'error' }>`
+	background: ${props => {
+		switch (props.type) {
+			case 'success': return 'var(--success)';
+			case 'warning': return 'var(--warning)';
+			case 'error': return 'var(--error)';
+			default: return 'var(--background-tertiary)';
+		}
+	}};
+	color: white;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	font-weight: 500;
+	margin-left: 8px;
+`;
+
 type FormValues = {
 	username: string;
+	discriminator: string;
 };
 
 interface UserSearchResult {
@@ -93,6 +111,16 @@ interface UserSearchResult {
 	username: string;
 	discriminator: string;
 	avatar?: string | null;
+}
+
+interface UserSearchResponse {
+	users: Array<{
+		id: string;
+		username: string;
+		discriminator: string;
+		avatar?: string | null;
+	}>;
+	total_results: number;
 }
 
 export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
@@ -112,9 +140,11 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 	const [searchResults, setSearchResults] = React.useState<UserSearchResult[]>([]);
 	const [isSearching, setIsSearching] = React.useState(false);
 	const [selectedUser, setSelectedUser] = React.useState<UserSearchResult | null>(null);
-	const [isCreatingDM, setIsCreatingDM] = React.useState(false);
+	const [isSendingRequest, setIsSendingRequest] = React.useState(false);
+	const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
 
 	const username = watch("username");
+	const discriminator = watch("discriminator");
 
 	// Search for users when username changes
 	React.useEffect(() => {
@@ -126,23 +156,50 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 		const searchUsers = async () => {
 			setIsSearching(true);
 			try {
-				// Search through users we already know about (from guilds, etc.)
+				// First, search through users we already know about (from guilds, etc.)
 				const knownUsers = app.users.all.filter(user => 
 					user.username.toLowerCase().includes(username.toLowerCase()) ||
 					`${user.username}#${user.discriminator}`.toLowerCase().includes(username.toLowerCase())
 				);
 
-				// Also try to fetch user by username if we don't have them locally
+				// If no known users found, try to search the backend API
 				if (knownUsers.length === 0) {
 					try {
-						// Try to find user by username (this might not work on all instances)
-						// For now, we'll work with known users
-						logger.debug("Searching through known users only");
+						logger.debug("Searching backend API for users");
+						const apiResponse = await app.rest.get<UserSearchResponse>(`/api/v9/users/search?q=${encodeURIComponent(username)}&limit=20`);
+						
+						if (apiResponse && apiResponse.users) {
+							// Filter results to match the username more closely
+							const apiUsers = apiResponse.users.filter(user => 
+								user.username.toLowerCase().includes(username.toLowerCase()) ||
+								`${user.username}#${user.discriminator}`.toLowerCase().includes(username.toLowerCase())
+							);
+							
+							// Add API users to local store if they don't exist
+							apiUsers.forEach(user => {
+								if (!app.users.has(user.id)) {
+									app.users.add({
+										...user,
+										avatar: user.avatar || null
+									});
+								}
+							});
+							
+							// Use API results
+							setSearchResults(apiUsers.map(user => ({
+								id: user.id,
+								username: user.username,
+								discriminator: user.discriminator,
+								avatar: user.avatar,
+							})));
+							return;
+						}
 					} catch (error) {
-						logger.debug("Could not search external users");
+						logger.debug("Backend search failed, falling back to known users only:", error);
 					}
 				}
 
+				// Fallback to known users
 				setSearchResults(knownUsers.map(user => ({
 					id: user.id,
 					username: user.username,
@@ -159,88 +216,127 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 
 		const debounceTimer = setTimeout(searchUsers, 300);
 		return () => clearTimeout(debounceTimer);
-	}, [username, app.users.all]);
+	}, [username, app.users.count]);
 
-	const createDirectMessage = async (user: UserSearchResult) => {
-		setIsCreatingDM(true);
+	const sendFriendRequest = async (user: UserSearchResult) => {
+		setIsSendingRequest(true);
 		try {
-			// Check if we already have a DM with this user
-			const existingDM = app.privateChannels.all.find(channel => 
-				channel.type === ChannelType.DM && 
-				channel.recipients?.some(recipient => recipient.id === user.id)
-			);
-
-			if (existingDM) {
-				// Navigate to existing DM
-				navigate(`/channels/@me/${existingDM.id}`);
+			await app.relationships.sendFriendRequest(user.username, user.discriminator);
+			setSuccessMessage(`Friend request sent to ${user.username}#${user.discriminator}!`);
+			
+			// Reset form after successful request
+			reset();
+			setSelectedUser(null);
+			setSearchResults([]);
+			
+			// Auto-close after 2 seconds
+			setTimeout(() => {
 				modalController.closeAll();
-				return;
+			}, 2000);
+		} catch (error: any) {
+			logger.error("Error sending friend request:", error);
+			
+			// Handle specific error cases
+			if (error.message?.includes("already friends")) {
+				setError("username", {
+					type: "manual",
+					message: "You are already friends with this user.",
+				});
+			} else if (error.message?.includes("already sent")) {
+				setError("username", {
+					type: "manual",
+					message: "You already sent a friend request to this user.",
+				});
+			} else if (error.message?.includes("blocked")) {
+				setError("username", {
+					type: "manual",
+					message: "This user has blocked you.",
+				});
+			} else if (error.message?.includes("not found")) {
+				setError("username", {
+					type: "manual",
+					message: "User not found. Please check the username and discriminator.",
+				});
+			} else {
+				setError("username", {
+					type: "manual",
+					message: "Failed to send friend request. Please try again.",
+				});
 			}
-
-			// Create a new DM channel
-			// Note: This might require the server to support DM creation
-			// For now, we'll try to navigate to a potential DM channel
-			logger.info(`Attempting to create DM with ${user.username}#${user.discriminator}`);
-			
-			// Since we can't guarantee DM creation works, we'll show a success message
-			// and suggest the user try messaging them
-			modalController.closeAll();
-			
-			// Show success message
-			modalController.push({
-				type: "error",
-				title: "User Found!",
-				description: `Found ${user.username}#${user.discriminator}. You can now start a conversation with them by navigating to Direct Messages.`,
-				error: "Success",
-				recoverable: false,
-			});
-		} catch (error) {
-			logger.error("Error creating DM:", error);
-			setError("username", {
-				type: "manual",
-				message: "Could not create direct message. Please try again.",
-			});
 		} finally {
-			setIsCreatingDM(false);
+			setIsSendingRequest(false);
 		}
 	};
 
 	const onSubmit = handleSubmit((data) => {
 		if (selectedUser) {
-			createDirectMessage(selectedUser);
+			sendFriendRequest(selectedUser);
 		} else if (searchResults.length > 0) {
 			// Auto-select first result
-			createDirectMessage(searchResults[0]);
+			sendFriendRequest(searchResults[0]);
+		} else if (data.username && data.discriminator) {
+			// Try to send request to username#discriminator format
+			sendFriendRequest({
+				id: '', // Will be set by the server
+				username: data.username,
+				discriminator: data.discriminator,
+			});
 		} else {
 			setError("username", {
 				type: "manual",
-				message: "No users found with that username. Try searching for a different user.",
+				message: "Please enter a username and discriminator.",
 			});
 		}
 	});
+
+	const getRelationshipStatus = (user: UserSearchResult) => {
+		if (app.relationships.isFriend(user.id)) {
+			return { type: 'success' as const, text: 'Friends' };
+		} else if (app.relationships.hasIncomingRequest(user.id)) {
+			return { type: 'warning' as const, text: 'Incoming Request' };
+		} else if (app.relationships.hasOutgoingRequest(user.id)) {
+			return { type: 'warning' as const, text: 'Request Sent' };
+		} else if (app.relationships.isBlocked(user.id)) {
+			return { type: 'error' as const, text: 'Blocked' };
+		}
+		return null;
+	};
 
 	return (
 		<Modal
 			{...props}
 			onClose={() => modalController.closeAll()}
-			title="Find User"
-			description="Search for users by username to start a conversation with them."
+			title="Add Friend"
+			description="Search for users by username to send them a friend request."
 			actions={[
 				{
 					onClick: onSubmit,
-					children: <span>{selectedUser ? "Start Chat" : "Search"}</span>,
+					children: <span>{selectedUser ? "Send Request" : "Send Request"}</span>,
 					palette: "primary",
 					confirmation: true,
-					disabled: isLoading || isSearching || (!selectedUser && searchResults.length === 0),
+					disabled: isLoading || isSearching || isSendingRequest || (!selectedUser && searchResults.length === 0 && (!username || !discriminator)),
 				},
 				{
 					onClick: () => modalController.pop("close"),
 					children: <span>Cancel</span>,
 					palette: "link",
-					disabled: isLoading || isCreatingDM,
+					disabled: isLoading || isSendingRequest,
 				},
 			]}
 		>
+			{successMessage && (
+				<div style={{ 
+					background: 'var(--success)', 
+					color: 'white', 
+					padding: '12px', 
+					borderRadius: '6px', 
+					marginBottom: '16px',
+					textAlign: 'center'
+				}}>
+					{successMessage}
+				</div>
+			)}
+
 			<form
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
@@ -252,7 +348,6 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 				<FriendInputContainer>
 					<LabelWrapper error={!!errors.username}>
 						<InputLabel>Username</InputLabel>
-
 						{errors.username && (
 							<InputErrorText>
 								<>
@@ -264,14 +359,42 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 					</LabelWrapper>
 					<Input
 						{...register("username", { required: "Username is required" })}
-						placeholder="Enter username (e.g., username#1234)"
+						placeholder="Enter username"
 						type="text"
-						maxLength={37}
+						maxLength={32}
 						required
 						error={!!errors.username}
-						disabled={isLoading || isCreatingDM}
+						disabled={isLoading || isSendingRequest}
 						autoFocus
-						minLength={1}
+					/>
+				</FriendInputContainer>
+
+				<FriendInputContainer style={{ marginTop: '16px' }}>
+					<LabelWrapper error={!!errors.discriminator}>
+						<InputLabel>Discriminator</InputLabel>
+						{errors.discriminator && (
+							<InputErrorText>
+								<>
+									<TextDivider>-</TextDivider>
+									{errors.discriminator.message}
+								</>
+							</InputErrorText>
+						)}
+					</LabelWrapper>
+					<Input
+						{...register("discriminator", { 
+							required: "Discriminator is required",
+							pattern: {
+								value: /^\d{4}$/,
+								message: "Discriminator must be 4 digits"
+							}
+						})}
+						placeholder="0000"
+						type="text"
+						maxLength={4}
+						required
+						error={!!errors.discriminator}
+						disabled={isLoading || isSendingRequest}
 					/>
 				</FriendInputContainer>
 
@@ -288,30 +411,43 @@ export function AddFriendModal({ ...props }: ModalProps<"add_friend">) {
 						<div style={{ marginBottom: "12px", color: "var(--text-muted)", fontSize: "14px" }}>
 							Found {searchResults.length} user{searchResults.length !== 1 ? 's' : ''}:
 						</div>
-						{searchResults.map((user) => (
-							<UserResult
-								key={user.id}
-								onClick={() => setSelectedUser(user)}
-								style={{
-									border: selectedUser?.id === user.id ? "2px solid var(--brand)" : undefined,
-								}}
-							>
-								<UserAvatar avatar={user.avatar} />
-								<UserInfo>
-									<Username>{user.username}#{user.discriminator}</Username>
-									<UserId>ID: {user.id}</UserId>
-								</UserInfo>
-								<ActionButton
-									onClick={(e) => {
-										e.stopPropagation();
-										createDirectMessage(user);
+						{searchResults.map((user) => {
+							const status = getRelationshipStatus(user);
+							return (
+								<UserResult
+									key={user.id}
+									onClick={() => setSelectedUser(user)}
+									style={{
+										border: selectedUser?.id === user.id ? "2px solid var(--brand)" : undefined,
 									}}
-									disabled={isCreatingDM}
 								>
-									{isCreatingDM ? "Creating..." : "Chat"}
-								</ActionButton>
-							</UserResult>
-						))}
+									<UserAvatar avatar={user.avatar} />
+									<UserInfo>
+										<Username>
+											{user.username}#{user.discriminator}
+											{status && (
+												<StatusBadge type={status.type}>
+													{status.text}
+												</StatusBadge>
+											)}
+										</Username>
+										<UserId>ID: {user.id}</UserId>
+									</UserInfo>
+									<ActionButton
+										onClick={(e) => {
+											e.stopPropagation();
+											sendFriendRequest(user);
+										}}
+										disabled={isSendingRequest || status?.type === 'success' || status?.type === 'warning'}
+									>
+										{isSendingRequest ? "Sending..." : 
+										 status?.type === 'success' ? "Friends" :
+										 status?.type === 'warning' ? "Request Sent" :
+										 "Add Friend"}
+									</ActionButton>
+								</UserResult>
+							);
+						})}
 					</SearchResults>
 				)}
 

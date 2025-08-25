@@ -18,7 +18,7 @@ import {
 } from "@components/AuthComponents";
 import { AnimatedBackground } from "@components/AnimatedBackground";
 import { TextDivider } from "@components/Divider";
-import DOBInput from "@components/DOBInput";
+
 import HCaptcha from "@components/HCaptcha";
 import HCaptchaLib from "@hcaptcha/react-hcaptcha";
 import { useAppStore } from "@hooks/useAppStore";
@@ -41,7 +41,6 @@ type FormValues = {
 	email: string;
 	username: string;
 	password: string;
-	date_of_birth: string;
 	captcha_key?: string;
 };
 
@@ -63,10 +62,7 @@ function RegistrationPage() {
 		clearErrors,
 	} = useForm<FormValues>();
 
-	const _ = register("date_of_birth", {
-		required: true,
-		pattern: /^\d{4}-\d{2}-\d{2}$/,
-	});
+
 
 	const resetCaptcha = () => {
 		captchaRef.current?.resetCaptcha();
@@ -80,7 +76,6 @@ function RegistrationPage() {
 	);
 
 	const onSubmit = handleSubmit((data) => {
-		if (errors.date_of_birth) return;
 
 		setLoading(true);
 		setCaptchaSiteKey(undefined);
@@ -177,19 +172,7 @@ function RegistrationPage() {
 
 	return (
 		<AnimatedBackground gifUrl={app.theme.backgroundGifUrl ?? "https://media.discordapp.net/attachments/1405695893381841006/1408702250385145948/background_1_1.gif?ex=68aab3b4&is=68a96234&hm=357d19e4a1f7ebef7054187c0c58226e4127d798c180f76fc29bd8963712af1b&="}>
-			<AuthContainer>
-				{AUTH_NO_BRANDING ? (
-					<>
-						<Header>Create your Komet account</Header>
-					</>
-				) : (
-					<>
-						<KometLogoBlue height={48} width="100%" />
-						<SubHeader noBranding>Create your Komet account</SubHeader>
-					</>
-				)}
-
-				<FormContainer onSubmit={onSubmit}>
+			<FormContainer onSubmit={onSubmit}>
 					<InputContainer marginBottom={true} style={{ marginTop: 0 }}>
 						<LabelWrapper error={!!errors.instance}>
 							<InputLabel>Instance</InputLabel>
@@ -293,37 +276,7 @@ function RegistrationPage() {
 						</InputWrapper>
 					</InputContainer>
 
-					<InputContainer marginBottom={true}>
-						<LabelWrapper error={!!errors.date_of_birth}>
-							<InputLabel>Date of Birth</InputLabel>
-							{errors.date_of_birth && (
-								<InputErrorText>
-									<>
-										<TextDivider>-</TextDivider>
-										{errors.date_of_birth.message}
-									</>
-								</InputErrorText>
-							)}
-						</LabelWrapper>
 
-						<InputWrapper>
-							<DOBInput
-								onChange={(value) => setValue("date_of_birth", value)}
-								onErrorChange={(errors) => {
-									const hasError = Object.values(errors).some((error) => error);
-									if (hasError) {
-										// set to first error
-										setError("date_of_birth", {
-											type: "manual",
-											message: Object.values(errors).filter((x) => x)[0],
-										});
-									} else clearErrors("date_of_birth");
-								}}
-								error={!!errors.date_of_birth}
-								disabled={loading}
-							/>
-						</InputWrapper>
-					</InputContainer>
 
 					<SubmitButton palette="primary" type="submit" disabled={loading}>
 						Create Komet Account
@@ -341,7 +294,6 @@ function RegistrationPage() {
 						</AuthSwitchPageLink>
 					</AuthSwitchPageContainer>
 				</FormContainer>
-			</AuthContainer>
 		</AnimatedBackground>
 	);
 }

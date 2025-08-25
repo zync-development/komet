@@ -183,7 +183,7 @@ function Chat() {
 		);
 	}
 
-	if (!activeChannel.hasPermission("VIEW_CHANNEL")) {
+			if (!activeChannel.hasPermission("ViewChannel")) {
 		return (
 			<WrapperTwo>
 				<span

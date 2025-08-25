@@ -1,28 +1,62 @@
-import type { Snowflake } from "@spacebarchat/spacebar-api-types/globals";
-import type { APIRole } from "@spacebarchat/spacebar-api-types/v9";
+import { action, computed, makeAutoObservable, observable, type IObservableArray } from "mobx";
 import { Role } from "@structures";
-import { action, computed, makeAutoObservable, observable, ObservableMap } from "mobx";
 import AppStore from "./AppStore";
 
 export default class RoleStore {
-	private readonly app: AppStore;
-	@observable private readonly roles: ObservableMap<Snowflake, Role>;
+	@observable readonly roles: IObservableArray<Role>;
 
-	constructor(app: AppStore) {
-		this.app = app;
-		this.roles = observable.map();
+	constructor(private readonly app: AppStore) {
+		this.roles = observable.array([]);
 
 		makeAutoObservable(this);
 	}
 
 	@action
-	add(role: APIRole) {
-		this.roles.set(role.id, new Role(this.app, role));
+	add(role: Role) {
+		this.roles.push(role);
+		this.sortRoles();
 	}
 
 	@action
-	addAll(roles: APIRole[]) {
+	update(role: Role) {
+		const existing = this.roles.find((r) => r.id === role.id);
+		if (existing) {
+			existing.update(role);
+		} else {
+			this.add(role);
+		}
+	}
+
+	@action
+	addAll(roles: Role[]) {
 		roles.forEach((role) => this.add(role));
+	}
+
+	@action
+	remove(id: string) {
+		const index = this.roles.findIndex((r) => r.id === id);
+		if (index !== -1) {
+			this.roles.splice(index, 1);
+		}
+	}
+
+	@action
+	sortRoles() {
+		this.roles.replace(this.roles.slice().sort((a: Role, b: Role) => a.position - b.position));
+	}
+
+	@action
+	updateRole(role: Role) {
+		const existingRole = this.roles.find((r) => r.id === role.id);
+		if (existingRole) {
+			existingRole.update(role);
+		} else {
+			this.add(role);
+		}
+	}
+
+	get(id: string) {
+		return this.roles.find((r) => r.id === id);
 	}
 
 	@computed
@@ -30,29 +64,14 @@ export default class RoleStore {
 		return Array.from(this.roles.values());
 	}
 
-	@action
-	remove(id: Snowflake) {
-		this.roles.delete(id);
+	@computed
+	get count() {
+		return this.roles.length;
 	}
 
-	@action
-	update(role: APIRole) {
-		this.roles.get(role.id)?.update(role);
-	}
-
-	get(id: Snowflake) {
-		return this.roles.get(id);
-	}
-
-	has(id: Snowflake) {
-		return this.roles.has(id);
-	}
-
-	asList() {
-		return Array.from(this.roles.values());
-	}
-
-	get size() {
-		return this.roles.size;
+	@computed
+	get hasRoles() {
+		return this.roles.length > 0;
 	}
 }
+

@@ -487,7 +487,10 @@ export default class GatewayConnectionStore {
 			this.app.users.addAll(users);
 		}
 
-		// TODO: store relationships
+		// Store relationships
+		if (data.relationships) {
+			this.app.relationships.addAll(data.relationships);
+		}
 		this.app.readStateStore.addAll(read_state.entries);
 		this.app.privateChannels.addAll(private_channels);
 

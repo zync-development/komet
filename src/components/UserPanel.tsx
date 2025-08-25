@@ -1,113 +1,54 @@
-import { modalController } from "@/controllers/modals";
-import { Floating, FloatingTrigger } from "@components/floating";
 import { useAppStore } from "@hooks/useAppStore";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import Avatar from "./Avatar";
-import Icon from "./Icon";
-import IconButton from "./IconButton";
-
-const Section = styled.section`
-	flex: 0 0 auto;
-	background-color: var(--background-secondary-alt);
-`;
+import { PresenceUpdateStatus } from "@spacebarchat/spacebar-api-types/v9";
 
 const Container = styled.div`
-	display: flex;
+	width: 52px;
 	height: 52px;
-	align-items: center;
-	padding: 0 8px;
-	margin-bottom: 1px;
-	background-color: var(--background-secondary-alt);
-`;
-
-const AvatarWrapper = styled.div`
+	border-radius: 14px;
+	background-color: var(--background-tertiary);
 	display: flex;
 	align-items: center;
-	min-width: 120px;
-	padding-left: 2px;
-	margin-right: 8px;
-	border-radius: 4px;
-	cursor: default;
-`;
-
-const Name = styled.div`
-	padding: 4px 0 4px 8px;
-	margin-right: 4px;
-`;
-
-const Username = styled.div`
-	font-size: 14px;
-	font-weight: var(--font-weight-medium);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	justify-content: center;
+	transition: all 0.15s ease;
+	border: 1px solid rgba(255, 255, 255, 0.06);
 	cursor: pointer;
-`;
+	position: relative;
 
-const Subtext = styled.div`
-	font-size: 12px;
-	font-weight: var(--font-weight-regular);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	user-select: none;
-`;
-
-const ActionsWrapper = styled.div`
-	flex: 1;
-	flex-direction: row;
-	flex-wrap: no-wrap;
-	justify-content: flex-end;
-	align-items: stretch;
-	display: flex;
-`;
-
-const SettingsButton = styled(IconButton)`
 	&:hover {
-		opacity: 0.8;
+		border-radius: 16px;
+		background-color: var(--background-secondary);
+		transform: translateY(-1px);
+		border-color: rgba(255, 255, 255, 0.1);
 	}
 `;
 
 function UserPanel() {
 	const app = useAppStore();
-	const presence = app.presences.get(app.account!.id);
+	const presence = app.presences.get(app.account?.id || '');
+	const status = presence?.status || PresenceUpdateStatus.Offline;
 
-	const openSettingsModal = () => {
-		modalController.push({
-			type: "settings",
-		});
+	const handleClick = () => {
+		app.ui.toggleProfileCard();
 	};
 
-	return (
-		<Section>
-			<Container>
-				<AvatarWrapper>
-					<Avatar popoutPlacement="top" onClick={null} showPresence presence={presence} size={32} />
-					<Name>
-						<Username>{app.account?.username}</Username>
-						<Subtext>#{app.account?.discriminator}</Subtext>
-					</Name>
-				</AvatarWrapper>
+	if (!app.account) return null;
 
-				<ActionsWrapper>
-					<Floating
-						placement="top"
-						type="tooltip"
-						offset={10}
-						props={{
-							content: <span>Settings</span>,
-						}}
-					>
-						<FloatingTrigger>
-							<SettingsButton aria-label="settings" color="#fff" onClick={openSettingsModal}>
-								<Icon icon="mdiCog" size="20px" />
-							</SettingsButton>
-						</FloatingTrigger>
-					</Floating>
-				</ActionsWrapper>
-			</Container>
-		</Section>
+	return (
+		<Container onClick={handleClick}>
+			<Avatar
+				user={app.account}
+				size={32}
+				showPresence={true}
+				presence={presence}
+				statusDotStyle={{
+					size: 12,
+					borderThickness: 2
+				}}
+			/>
+		</Container>
 	);
 }
 

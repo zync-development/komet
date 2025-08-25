@@ -4,7 +4,7 @@ import {
 	GuildMemberFlags,
 } from "@spacebarchat/spacebar-api-types/v9";
 import { AppStore } from "@stores";
-import { PermissionResolvable, Permissions } from "@utils";
+import { Permissions } from "@utils";
 import { action, computed, makeAutoObservable, observable } from "mobx";
 import Guild from "./Guild";
 import Role from "./Role";
@@ -73,7 +73,7 @@ export default class GuildMember {
 	}
 
 	hasPermission(permission: PermissionResolvable) {
-		const permissions = Permissions.getPermission(this.app.account!.id, this.guild);
+		  const permissions = Permissions.getPermission(this.app.account!.id, this.guild, undefined);
 		return permissions.has(permission);
 	}
 }

@@ -74,6 +74,17 @@ export const SubHeader = styled.h2<{ noBranding?: boolean }>`
 export const FormContainer = styled.form`
 	width: 100%;
 	margin-top: 40px;
+	background-color: rgba(36, 36, 36, 0.75);
+	border: 2px solid rgba(128, 128, 128, 0.15);
+	backdrop-filter: blur(20px);
+	max-width: 360px;
+	max-height: 600px;
+	padding: 30px 25px;
+	border-radius: 8px;
+	margin-inline-start: 50px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 20%);
 `;
 
 export const InputContainer = styled.h1<{ marginBottom: boolean }>`
@@ -242,18 +253,21 @@ export const SubmitButton = styled(Button)`
 
 export const AuthSwitchPageContainer = styled.div`
 	margin-top: 4px;
-	text-align: initial;
+	text-align: center;
 `;
 
 export const AuthSwitchPageLabel = styled.label`
 	font-size: 14px;
+	color: white;
+	font-weight: 400;
 `;
 
 export const AuthSwitchPageLink = styled.button`
 	font-size: 14px;
 	background: none;
 	border: none;
-	color: var(--text-link);
+	color: var(--accent);
+	font-weight: 400;
 
 	@media (max-width: 480px) {
 		display: inline-block;

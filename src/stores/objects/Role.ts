@@ -12,10 +12,12 @@ export default class Role {
 	@observable icon?: string | null | undefined;
 	@observable unicode_emoji?: string | null | undefined;
 	@observable position: number;
-	@observable permissions: string;
+	@observable permissions: bigint;
+	@observable denied_permissions: bigint;
 	managed: boolean;
 	@observable mentionable: boolean;
 	@observable tags?: APIRoleTags | undefined;
+	@observable memberCount: number = 0;
 
 	constructor(app: AppStore, data: APIRole) {
 		this.app = app;
@@ -27,7 +29,8 @@ export default class Role {
 		this.icon = data.icon;
 		this.unicode_emoji = data.unicode_emoji;
 		this.position = data.position;
-		this.permissions = data.permissions;
+		this.permissions = BigInt(data.permissions);
+		  this.denied_permissions = BigInt((data as any).denied_permissions ?? 0);
 		this.managed = data.managed;
 		this.mentionable = data.mentionable;
 		this.tags = data.tags;
@@ -38,5 +41,23 @@ export default class Role {
 	@action
 	update(role: APIRole) {
 		Object.assign(this, role);
+	}
+
+	@action
+	async fetchMemberCount() {
+		try {
+			const response = await this.app.rest.get(
+				`/guilds/${this.app.activeGuild?.id}/roles/${this.id}/member-ids`
+			);
+			    this.memberCount = (response as any[]).length;
+		} catch (error) {
+			console.error("Failed to fetch member count for role:", this.id, error);
+			this.memberCount = 0;
+		}
+	}
+
+	@action
+	setMemberCount(count: number) {
+		this.memberCount = count;
 	}
 }
